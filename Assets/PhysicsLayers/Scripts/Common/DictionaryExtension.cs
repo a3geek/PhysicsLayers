@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using UnityEngine;
-using UnityEditor;
 
 namespace a3geek.PhysicsLayers.Common
 {
