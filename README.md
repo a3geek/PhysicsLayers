@@ -5,10 +5,10 @@ PhysicsLayers
 ## Description
 Unityに簡易的な物理判定用レイヤーを追加するためのライブラリです。
 
-UnityのレイヤーはCamera LayerとPhysics Layerの二つの用途があるため、しばしばレイヤー数が足りなくなる事があります。  
-そこでPhysics Layerだけ別の手段を用いる事でUnityのレイヤー数不足を改善するのが目的です。
+UnityレイヤーはCamera LayerとPhysics Layerの二つの用途があるため、しばしばレイヤー数が足りなくなる事があります。  
+そこでPhysics Layerだけ別の手段を用いる事でUnityレイヤーから分離させ、レイヤー数不足を改善するのが目的です。
 
-方針としては、UnityのColliderは[`Physics.IgnoreCollision`](https://docs.unity3d.com/jp/540/ScriptReference/Physics.IgnoreCollision.html)関数を用いることでCollider同士の衝突を無効にする事が出来ます。  
+方針としてはUnityのColliderは[`Physics.IgnoreCollision`](https://docs.unity3d.com/jp/540/ScriptReference/Physics.IgnoreCollision.html)関数によってCollider同士の衝突を無効にする事が出来ます。  
 上記関数を活用して簡易的なPhysics Layerを実現します。
 
 ## Usage
@@ -30,7 +30,7 @@ UnityのレイヤーはCamera LayerとPhysics Layerの二つの用途がある�
 - AutoManagemenetが有効の場合は、自動で各種設定が行われます。
     - Awakeのタイミングで衝突判定の設定が行われます。
     - OnDestroyのタイミングで管理下から外されます。
-- Physics LayerのLayerIDは、Unityのレイヤーの最大値の31の次の32から始まります。
+- Physics LayerのLayerIDは、Unityレイヤーの最大値の31の次の32から始まります。
 - Physics LayerのLayerNameは空文字には出来ません。
 
 ## API
