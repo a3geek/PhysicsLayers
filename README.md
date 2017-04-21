@@ -138,3 +138,6 @@ Unityの[LayerMask](https://docs.unity3d.com/jp/540/ScriptReference/LayerMask.ht
 #### `bool ChangeLayer(int layerID)`
 レイヤーIDを変更する  
 衝突判定も再設定されます
+
+## Screenshots
+![screen shot](./Docs/Screenshot.gif)
