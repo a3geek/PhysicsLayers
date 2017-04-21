@@ -121,3 +121,20 @@ Unityの[LayerMask](https://docs.unity3d.com/jp/540/ScriptReference/LayerMask.ht
 
 #### `static int NameToLayer(string layerName)`
 レイヤー名から物理レイヤーIDを取得
+
+<br />
+
+### `abstract AbstractLayer`クラス
+各種レイヤー用クラスが継承している抽象クラスです。  
+
+### プロパティ
+#### `int LayerID { get; }`
+レイヤーID
+
+#### `bool AutoManagement { get; }`
+自動管理を行うかどうか
+
+### メソッド
+#### `bool ChangeLayer(int layerID)`
+レイヤーIDを変更する  
+衝突判定も再設定されます
