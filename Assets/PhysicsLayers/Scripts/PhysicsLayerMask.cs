@@ -10,10 +10,10 @@ namespace a3geek.PhysicsLayers
         public int Value { get; set; }
         
 
-        public static string LayerToName(int layer)
+        public static string LayerToName(int layerID)
         {
             var manager = LayersManager.Instance;
-            return manager == null ? "" : manager.PhysicsLayerInfos.LayerToName(layer);
+            return manager == null ? "" : manager.PhysicsLayerInfos.LayerToName(layerID);
         }
 
         public static int NameToLayer(string layerName)

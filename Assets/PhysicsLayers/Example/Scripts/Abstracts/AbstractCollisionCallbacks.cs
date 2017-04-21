@@ -24,7 +24,9 @@ namespace a3geek.PhysicsLayers.Examples.Abstracts
         protected virtual void Awake()
         {
             this.ignoreLayers = LayersManager.Instance
-                .GetIgnoreLayerNames(this.LayerID);
+                .GetIgnoreLayers(this.LayerID)
+                .Values
+                .ToList();
         }
 
         #region "Collision Callbacks"

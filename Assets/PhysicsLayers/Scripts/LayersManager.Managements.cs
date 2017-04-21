@@ -82,7 +82,7 @@ namespace a3geek.PhysicsLayers
 
             this.CheckDicKey(layerID);
             
-            if(layerID < LayerCount)
+            if(layerID < UnityLayerCount)
             {
                 return layerID;
             }

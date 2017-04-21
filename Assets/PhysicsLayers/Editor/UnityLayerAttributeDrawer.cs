@@ -8,7 +8,7 @@ namespace a3geek.PhysicsLayers.Editors
 {
     using Attributes;
 
-    [CustomPropertyDrawer(typeof(LayerAttribute))]
+    [CustomPropertyDrawer(typeof(UnityLayerAttribute))]
     public class LayerAttributeDrawer : PropertyDrawer
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -19,7 +19,7 @@ namespace a3geek.PhysicsLayers.Editors
                 return;
             }
 
-            var attribute = (LayerAttribute)this.attribute;
+            var attribute = (UnityLayerAttribute)this.attribute;
             var obj = Selection.activeGameObject;
             if(attribute.Fit2GameObjectLayer == true && obj != null)
             {

@@ -72,7 +72,7 @@ namespace a3geek.PhysicsLayers.Editors
         {
             target.UpdatePhysicsLayers(physicsLayers);
             
-            physicsLayers.AddRange(this.Target.Layers);
+            physicsLayers.AddRange(this.Target.UnityLayers);
             target.GetEnumerable().ToList().ForEach(infos => infos.UpdateLayerCollisions(physicsLayers.Keys.ToList()));
         }
     }

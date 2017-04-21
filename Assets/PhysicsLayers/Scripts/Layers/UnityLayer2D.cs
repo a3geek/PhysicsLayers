@@ -9,8 +9,8 @@ namespace a3geek.PhysicsLayers.Layers
     using Abstracts;
     using Attributes;
 
-    [AddComponentMenu("a3geek/Physics Layers/Layers/Layer")]
-    public class Layer : AbstractColliderLayer
+    [AddComponentMenu("a3geek/Physics Layers/Layers/Unity Layer 2D")]
+    public class UnityLayer2D : AbstractCollider2DLayer
     {
         public override int LayerID
         {
@@ -23,15 +23,15 @@ namespace a3geek.PhysicsLayers.Layers
         }
 
         [Header("Behaviour")]
-        [SerializeField, Layer(true)]
+        [SerializeField, UnityLayer(true)]
         protected int layerID = 0;
         [SerializeField]
         protected bool autoManagement = true;
 
-        
+
         protected override bool IsEnableLayer(LayersManager manager, int layerID)
         {
-            return manager.IsLayer(layerID);
+            return manager.IsUnityLayer(layerID);
         }
     }
 }

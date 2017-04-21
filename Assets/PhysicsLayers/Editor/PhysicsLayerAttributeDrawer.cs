@@ -22,23 +22,23 @@ namespace a3geek.PhysicsLayers.Editors
                 return;
             }
 
-            property.intValue = Mathf.Max(LayersManager.LayerCount, property.intValue);
+            property.intValue = Mathf.Max(LayersManager.UnityLayerCount, property.intValue);
 
             var layerID = property.intValue;
             var layers = manager.PhysicsLayers.OrderBy(pair => pair.Key).ToList();
             if(layers.Count <= 0)
             {
                 EditorGUI.DelayedIntField(position, property, label);
-                property.intValue = Mathf.Max(LayersManager.LayerCount, layerID);
+                property.intValue = Mathf.Max(LayersManager.UnityLayerCount, layerID);
 
                 return;
             }
 
-            layerID = Mathf.Min(layerID, LayersManager.LayerCount + layers.Count - 1);
+            layerID = Mathf.Min(layerID, LayersManager.UnityLayerCount + layers.Count - 1);
             var layerNames = layers.ConvertAll(layer => layer.Value).ToArray();
-            var popup = EditorGUI.Popup(position, label.text, layerID - LayersManager.LayerCount, layerNames);
+            var popup = EditorGUI.Popup(position, label.text, layerID - LayersManager.UnityLayerCount, layerNames);
 
-            property.intValue = popup + LayersManager.LayerCount;
+            property.intValue = popup + LayersManager.UnityLayerCount;
         }
     }
 }

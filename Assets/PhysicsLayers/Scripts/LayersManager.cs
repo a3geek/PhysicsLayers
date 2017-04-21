@@ -14,7 +14,7 @@ namespace a3geek.PhysicsLayers
     [AddComponentMenu("a3geek/Physics Layers/Layers Manager")]
     public sealed partial class LayersManager : MonoBehaviour
     {
-        public const int LayerCount = 32;
+        public const int UnityLayerCount = 32;
 
         #region "Singleton"
         public static LayersManager Instance
@@ -53,46 +53,32 @@ namespace a3geek.PhysicsLayers
             get { return this.PhysicsLayerInfos.LayerNames; }
         }
         
-        public Dictionary<int, string> Layers
+        public Dictionary<int, string> UnityLayers
         {
-            get { return this.layers ?? (this.layers = this.GetLayers()); }
+            get { return this.unityLayers ?? (this.unityLayers = this.GetUnityLayers()); }
         }
-        public List<int> LayerIDs
+        public List<int> UnityLayerIDs
         {
-            get { return this.Layers.ToList(layer => layer.Key); }
+            get { return this.UnityLayers.ToList(layer => layer.Key); }
         }
-        public List<string> LayerNames
+        public List<string> UnityLayerNames
         {
-            get { return this.Layers.ToList(layer => layer.Value); }
+            get { return this.UnityLayers.ToList(layer => layer.Value); }
         }
         
         [SerializeField, HideInInspector]
         private PhysicsLayerInfos physicsLayerInfos = new PhysicsLayerInfos();
 
-        private Dictionary<int, string> layers = null;
+        private Dictionary<int, string> unityLayers = null;
 
 
         public Dictionary<int, string> GetIgnoreLayers(int layerID)
         {
-            return this.GetIgnoreLayerIDs(layerID)
-                .ToDictionary(id => id, id => this.LayerToName(id));
-        }
-
-        public List<int> GetIgnoreLayerIDs(int layerID)
-        {
             var infos = this.PhysicsLayerInfos[layerID];
 
-            return infos == null ? new List<int>() : infos.GetEnumerable()
+            return infos == null ? new Dictionary<int, string>() : infos.GetEnumerable()
                 .Where(info => info.Collision == false)
-                .Select(info => info.LayerID)
-                .ToList();
-        }
-
-        public List<string> GetIgnoreLayerNames(int layerID)
-        {
-            return this.GetIgnoreLayers(layerID)
-                .Values
-                .ToList();
+                .ToDictionary(info => info.LayerID, info => this.LayerToName(info.LayerID));
         }
         
         public bool IsPhysicsLayer(int layerID)
@@ -100,14 +86,14 @@ namespace a3geek.PhysicsLayers
             return this.PhysicsLayerInfos[layerID] != null;
         }
 
-        public bool IsLayer(int layerID)
+        public bool IsUnityLayer(int layerID)
         {
-            return this.Layers.ContainsKey(layerID);
+            return this.UnityLayers.ContainsKey(layerID);
         }
 
-        public bool IsAnyLayer(int layerID)
+        public bool IsLayer(int layerID)
         {
-            return this.IsPhysicsLayer(layerID) | this.IsLayer(layerID);
+            return this.IsPhysicsLayer(layerID) | this.IsUnityLayer(layerID);
         }
 
         public int NameToLayer(string layerName)
@@ -122,10 +108,10 @@ namespace a3geek.PhysicsLayers
             return string.IsNullOrEmpty(physicsLayerName) ? LayerMask.LayerToName(layerID) : physicsLayerName;
         }
 
-        private Dictionary<int, string> GetLayers()
+        private Dictionary<int, string> GetUnityLayers()
         {
             var layers = new Dictionary<int, string>();
-            for(var i  = 0; i < LayerCount; i++)
+            for(var i  = 0; i < UnityLayerCount; i++)
             {
                 var layerName = LayerMask.LayerToName(i);
                 if(string.IsNullOrEmpty(layerName) == false)

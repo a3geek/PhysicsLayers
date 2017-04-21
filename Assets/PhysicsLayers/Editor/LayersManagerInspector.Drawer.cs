@@ -24,7 +24,7 @@ namespace a3geek.PhysicsLayers.Editors
                     EditorGUILayout.LabelField("Size");
 
                     var count = EditorGUILayout.DelayedIntField(layers.Count);
-                    layers.SetCount(count, index => index + LayersManager.LayerCount, index => "PhysicsLayer" + index);
+                    layers.SetCount(count, index => index + LayersManager.UnityLayerCount, index => "PhysicsLayer" + index);
                 }
 
                 EditorGUILayout.Space();
@@ -73,7 +73,7 @@ namespace a3geek.PhysicsLayers.Editors
                 using(var vert = new EditorGUILayout.VerticalScope())
                 {
                     EditorGUILayout.LabelField("Layers");
-                    for(var j = 0; j < LayersManager.LayerCount; j++)
+                    for(var j = 0; j < LayersManager.UnityLayerCount; j++)
                     {
                         var layerColl = physicsLayer[j];
                         if(layerColl == null)
@@ -87,15 +87,15 @@ namespace a3geek.PhysicsLayers.Editors
 
                     for(var j = 0; j < i; j++)
                     {
-                        var layerID = j + LayersManager.LayerCount;
-                        collInfos[layerID] = layerInfos[layerID][i + LayersManager.LayerCount].Collision;
+                        var layerID = j + LayersManager.UnityLayerCount;
+                        collInfos[layerID] = layerInfos[layerID][i + LayersManager.UnityLayerCount].Collision;
                     }
 
                     EditorGUILayout.Space();
                     EditorGUILayout.LabelField("Physics Layers");
                     for(var j = i; j < layerInfos.LayerCount; j++)
                     {
-                        var layerID = j + LayersManager.LayerCount;
+                        var layerID = j + LayersManager.UnityLayerCount;
                         collInfos[layerID] = this.DrawCollInfo(layerID, collInfos[layerID]);
                     }
                 }
