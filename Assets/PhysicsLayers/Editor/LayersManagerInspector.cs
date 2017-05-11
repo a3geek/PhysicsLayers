@@ -19,7 +19,6 @@ namespace a3geek.PhysicsLayers.Editors
 
         private bool layersFolder = true;
         private bool collInfosFolder = true;
-        private List<bool> collInfosFolders = new List<bool>();
 
 
         public override void OnInspectorGUI()

@@ -13,6 +13,9 @@ namespace a3geek.PhysicsLayers.Editors
     
     public partial class LayersManagerInspector
     {
+        private List<bool> collInfosFolders = new List<bool>();
+
+
         private void DrawPhysicsLayers(LayerDic layers)
         {
             EditorGUI.indentLevel += 1;
@@ -64,7 +67,7 @@ namespace a3geek.PhysicsLayers.Editors
                 this.collInfosFolders[i] = EditorGUILayout.Foldout(this.collInfosFolders[i], "Collision : " + physicsLayer.LayerName, true);
                 if(this.collInfosFolders[i] == false)
                 {
-                    return;
+                    continue;
                 }
 
                 var collInfos = physicsLayer.CollisionInfos;
