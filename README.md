@@ -39,7 +39,7 @@ Unityレイヤーはカメラレイヤーと物理レイヤーの二つの用途
 シングルトンを実装してありますので、`LayersManager.Instance`でアクセス出来ます。
 
 ### プロパティ
-#### `const int LayerCount = 32`
+#### `const int UnityLayerCount = 32`
 Unityレイヤーのレイヤー数
 
 #### `PhysicsLayerInfos PhysicsLayerInfos { get; }`

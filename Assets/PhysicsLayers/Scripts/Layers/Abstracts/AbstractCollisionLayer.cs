@@ -17,14 +17,6 @@ namespace a3geek.PhysicsLayers.Layers.Abstracts
         protected List<T> colliders = new List<T>();
         
         
-        protected virtual void Reset()
-        {
-            if(this.colliders.Count <= 0)
-            {
-                this.colliders = GetComponentsInChildren<T>().ToList();
-            }
-        }
-
         public virtual void IgnoreCollision(T otherCollider, bool ignore)
         {
             this.Colliders.ForEach(coll => this.IgnoreCollision(coll, otherCollider, ignore));
@@ -33,6 +25,18 @@ namespace a3geek.PhysicsLayers.Layers.Abstracts
         public virtual void IgnoreCollisions(List<T> otherColliders, bool ignore)
         {
             otherColliders.ForEach(coll => this.IgnoreCollision(coll, ignore));
+        }
+
+        [ContextMenu("Get Colliders")]
+        protected virtual void GetColliders()
+        {
+            this.colliders = GetComponents<T>().ToList();
+        }
+
+        [ContextMenu("Get Colliders In Children")]
+        protected virtual void GetCollidersInChildren()
+        {
+            this.colliders = GetComponentsInChildren<T>().ToList();
         }
         
         protected abstract void IgnoreCollision(T collider1, T collider2, bool ignore);
