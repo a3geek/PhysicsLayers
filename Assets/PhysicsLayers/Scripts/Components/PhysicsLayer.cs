@@ -9,20 +9,20 @@ namespace a3geek.PhysicsLayers.Components
     using Common;
     
     [Serializable]
-    public sealed class PhysicsLayer
+    public sealed class PhysicsLayer : ILayer
     {
         public LayerCollision this[int layerID]
         {
             get { return this.collisions.FirstOrDefault(info => info.LayerID == layerID); }
         }
-        public Dictionary<int, bool> CollisionInfos
+
+        public Dictionary<LayerID, bool> CollisionInfos
         {
             get { return this.collisions.ToDictionary(coll => coll.LayerID, coll => coll.Collision); }
         }
-        public int LayerID
+        public LayerID LayerID
         {
             get { return this.layerID; }
-            internal set { this.layerID = value < 0 ? 0 : value; }
         }
         public string LayerName
         {
@@ -33,16 +33,18 @@ namespace a3geek.PhysicsLayers.Components
         [SerializeField]
         private string key = "";
         [SerializeField]
-        private int layerID = 0;
+        private LayerID layerID = null;
         [SerializeField]
         private List<LayerCollision> collisions = new List<LayerCollision>();
 
 
-        public PhysicsLayer() {; }
+        public PhysicsLayer() : this(LayersManager.UnityLayerCount, "")
+        {
+        }
 
         public PhysicsLayer(int layerID, string layerName)
         {
-            this.LayerID = layerID;
+            this.layerID = new LayerID(layerID, true);
             this.LayerName = layerName;
         }
         
@@ -53,46 +55,47 @@ namespace a3geek.PhysicsLayers.Components
                 yield return this.collisions[i];
             }
         }
-
-        public void UpdateLayerCollisions(List<int> layerIDs)
+        
+        public bool DeleteLayerCollision(LayerID layerID)
         {
-            this.RemoveRange(collisions.Count);
-            layerIDs.ForEach(layerID => this.UpdateLayerCollision(layerID));
+            return this.collisions.Remove(this[layerID]);
         }
 
-        public void UpdateLayerCollisions(Dictionary<int, bool> collisions)
+        public bool DeleteLayerCollision(int layerID)
         {
-            this.RemoveRange(collisions.Count);
-            collisions.ForEach(coll => this.UpdateLayerCollision(coll.Key, coll.Value));
+            return this.collisions.Remove(this[layerID]);
         }
 
-        private void RemoveRange(int count)
+        public void Update(List<LayerID> layerIDs)
         {
-            this.collisions.RemoveRange(Mathf.Min(count, this.collisions.Count), Mathf.Max(this.collisions.Count - count, 0));
+            this.Update(layerIDs, coll => coll.Collision);
+        }
+        
+        public void Update(Dictionary<LayerID, bool> collisions)
+        {
+            this.Update(collisions.Keys.ToList(), coll => collisions[coll.LayerID]);
         }
 
-        private LayerCollision UpdateLayerCollision(int layerID)
+        private void Update(List<LayerID> layerIDs, Func<LayerCollision, bool> collGetter)
         {
-            var coll = this[layerID] ?? this.AddLayerCollision(layerID);
-            coll.LayerID = layerID;
+            var ids = this.collisions.ConvertAll(coll => coll.LayerID);
+            layerIDs.ForEach(layerID =>
+            {
+                ids.Remove(layerID);
 
-            return coll;
+                var coll = this[layerID] ?? this.AddLayerCollision(layerID);
+                coll.Collision = collGetter(coll);
+            });
+
+            ids.ForEach(id => this.DeleteLayerCollision(id));
         }
 
-        private LayerCollision UpdateLayerCollision(int layerID, bool collision)
+        private LayerCollision AddLayerCollision(LayerID layerID)
         {
-            var coll = this.UpdateLayerCollision(layerID);
-            coll.Collision = collision;
+            var layerCollision = new LayerCollision(layerID);
+            this.collisions.Add(layerCollision);
 
-            return coll;
-        }
-
-        private LayerCollision AddLayerCollision(int layerID)
-        {
-            var info = new LayerCollision(layerID);
-            this.collisions.Add(info);
-
-            return info;
+            return layerCollision;
         }
     }
 }

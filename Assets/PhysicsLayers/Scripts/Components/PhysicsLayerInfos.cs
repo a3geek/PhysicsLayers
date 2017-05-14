@@ -9,73 +9,56 @@ namespace a3geek.PhysicsLayers.Components
     using Common;
     
     [Serializable]
-    public sealed class PhysicsLayerInfos
+    public sealed class PhysicsLayerInfos : AbstractLayerInfos<PhysicsLayer>
     {
-        public PhysicsLayer this[int layerID]
-        {
-            get { return this.layers.FirstOrDefault(info => info.LayerID == layerID); }
-        }
-        public PhysicsLayer this[string layerName]
-        {
-            get { return this.layers.FirstOrDefault(info => info.LayerName == layerName); }
-        }
-        
-        public int LayerCount
+        public override int LayerCount
         {
             get { return this.layers.Count; }
         }
-        public Dictionary<int, string> Layers
+        public override Dictionary<LayerID, string> Layers
         {
-            get { return this.layers.ToDictionary(coll => coll.LayerID, coll => coll.LayerName); }
+            get { return this.layers.ToDictionary(layer => layer.LayerID, layer => layer.LayerName); }
         }
-        public List<int> LayerIDs
+        public override List<LayerID> LayerIDs
         {
-            get { return this.layers.ConvertAll(coll => coll.LayerID); }
+            get { return this.layers.ConvertAll(layer => layer.LayerID); }
         }
-        public List<string> LayerNames
+        public override List<string> LayerNames
         {
-            get { return this.layers.ConvertAll(coll => coll.LayerName); }
-        }
-
-        [SerializeField]
-        private List<PhysicsLayer> layers = new List<PhysicsLayer>();
-
-
-        public string LayerToName(int layerID)
-        {
-            var info = this[layerID];
-            return info == null ? "" : info.LayerName;
-        }
-
-        public int NameToLayer(string layerName)
-        {
-            var info = this[layerName];
-            return info == null ? -1 : info.LayerID;
+            get { return this.layers.ConvertAll(layer => layer.LayerName); }
         }
         
-        public IEnumerable<PhysicsLayer> GetEnumerable()
+        
+        public void DeleteLayer(int layerID, bool adjustID = true)
         {
-            for(var i = 0; i < this.layers.Count; i++)
+            this.layers.Remove(this[layerID]);
+
+            this.layers.ForEach(lay =>
             {
-                yield return this.layers[i];
-            }
+                lay.DeleteLayerCollision(layerID);
+
+                if(adjustID == true && lay.LayerID > layerID)
+                {
+                    lay.LayerID.ChangeID(lay.LayerID - 1);
+                }
+            });
         }
 
-        public void UpdatePhysicsLayers(Dictionary<int, string> layers)
+        public void Update(Dictionary<LayerID, string> layers, bool adjustID = true)
         {
-            this.layers.RemoveRange(Mathf.Min(layers.Count, this.layers.Count), Mathf.Max(this.layers.Count - layers.Count, 0));
-            layers.ForEach(layer => this.UpdatePhysicsLayer(layer.Key, layer.Value));
+            var ids = this.LayerIDs;
+
+            layers.ForEach(layer =>
+            {
+                ids.Remove(layer.Key);
+
+                var lay = this[layer.Key] ?? this.AddPhysicsLayer(layer.Key, layer.Value);
+                lay.LayerName = layer.Value;
+            });
+
+            ids.ForEach(id => this.DeleteLayer(id, adjustID));
         }
-
-        private PhysicsLayer UpdatePhysicsLayer(int layerID, string layerName)
-        {
-            var layer = this[layerID] ?? this.AddPhysicsLayer(layerID, layerName);
-            layer.LayerID = layerID;
-            layer.LayerName = layerName;
-
-            return layer;
-        }
-
+        
         private PhysicsLayer AddPhysicsLayer(int layerID, string layerName)
         {
             var layer = new PhysicsLayer(layerID, layerName);

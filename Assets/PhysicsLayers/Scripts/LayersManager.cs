@@ -36,17 +36,22 @@ namespace a3geek.PhysicsLayers
         {
             get { return this.physicsLayerInfos; }
         }
+        public UnityLayerInfos UnityLayerInfos
+        {
+            get { return this.unityLayerInfos; }
+        }
+
         public int PhysicsLayerCount
         {
             get { return this.PhysicsLayerInfos.LayerCount; }
         }
         public Dictionary<int, string> PhysicsLayers
         {
-            get { return this.PhysicsLayerInfos.Layers; }
+            get { return this.PhysicsLayerInfos.Layers.ToDictionary(layer => layer.Key.ID, layer => layer.Value); }
         }
         public List<int> PhysicsLayerIDs
         {
-            get { return this.PhysicsLayerInfos.LayerIDs; }
+            get { return this.PhysicsLayerInfos.LayerIDs.ConvertAll(layerID => layerID.ID); }
         }
         public List<string> PhysicsLayerNames
         {
@@ -55,21 +60,21 @@ namespace a3geek.PhysicsLayers
         
         public Dictionary<int, string> UnityLayers
         {
-            get { return this.unityLayers ?? (this.unityLayers = this.GetUnityLayers()); }
+            get { return this.UnityLayerInfos.Layers.ToDictionary(layer => layer.Key.ID, layer => layer.Value); }
         }
         public List<int> UnityLayerIDs
         {
-            get { return this.UnityLayers.ToList(layer => layer.Key); }
+            get { return this.UnityLayerInfos.LayerIDs.ConvertAll(layerID => layerID.ID); }
         }
         public List<string> UnityLayerNames
         {
-            get { return this.UnityLayers.ToList(layer => layer.Value); }
+            get { return this.UnityLayerInfos.LayerNames; }
         }
         
-        [SerializeField, HideInInspector]
+        [SerializeField]
         private PhysicsLayerInfos physicsLayerInfos = new PhysicsLayerInfos();
-
-        private Dictionary<int, string> unityLayers = null;
+        [SerializeField]
+        private UnityLayerInfos unityLayerInfos = new UnityLayerInfos();
 
 
         public Dictionary<int, string> GetIgnoreLayers(int layerID)
@@ -78,7 +83,7 @@ namespace a3geek.PhysicsLayers
 
             return infos == null ? new Dictionary<int, string>() : infos.GetEnumerable()
                 .Where(info => info.Collision == false)
-                .ToDictionary(info => info.LayerID, info => this.LayerToName(info.LayerID));
+                .ToDictionary(info => info.LayerID.ID, info => this.LayerToName(info.LayerID));
         }
         
         public bool IsPhysicsLayer(int layerID)
@@ -88,7 +93,7 @@ namespace a3geek.PhysicsLayers
 
         public bool IsUnityLayer(int layerID)
         {
-            return this.UnityLayers.ContainsKey(layerID);
+            return this.UnityLayerInfos[layerID] != null;
         }
 
         public bool IsLayer(int layerID)
@@ -98,29 +103,14 @@ namespace a3geek.PhysicsLayers
 
         public int NameToLayer(string layerName)
         {
-            var physicsLayerID = this.PhysicsLayerInfos.NameToLayer(layerName);
-            return physicsLayerID < 0 ? LayerMask.NameToLayer(layerName) : physicsLayerID;
+            var physics = this.PhysicsLayerInfos.NameToLayer(layerName);
+            return physics < 0 ? this.UnityLayerInfos.NameToLayer(layerName) : physics;
         }
 
         public string LayerToName(int layerID)
         {
-            var physicsLayerName = this.PhysicsLayerInfos.LayerToName(layerID);
-            return string.IsNullOrEmpty(physicsLayerName) ? LayerMask.LayerToName(layerID) : physicsLayerName;
-        }
-
-        private Dictionary<int, string> GetUnityLayers()
-        {
-            var layers = new Dictionary<int, string>();
-            for(var i  = 0; i < UnityLayerCount; i++)
-            {
-                var layerName = LayerMask.LayerToName(i);
-                if(string.IsNullOrEmpty(layerName) == false)
-                {
-                    layers.Add(i, layerName);
-                }
-            }
-            
-            return layers;
+            var physics = this.PhysicsLayerInfos.LayerToName(layerID);
+            return string.IsNullOrEmpty(physics) == true ? this.UnityLayerInfos.LayerToName(layerID) : physics;
         }
     }
 }

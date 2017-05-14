@@ -9,7 +9,7 @@ namespace a3geek.PhysicsLayers.Editors
     using Common;
     using Components;
 
-    using LayerDic = Dictionary<int, string>;
+    using LayerDic = Dictionary<Components.LayerID, string>;
     
     public partial class LayersManagerInspector
     {
@@ -24,7 +24,7 @@ namespace a3geek.PhysicsLayers.Editors
             {
                 using(var hori = new EditorGUILayout.HorizontalScope())
                 {
-                    EditorGUILayout.LabelField("Size");
+                    EditorGUILayout.PrefixLabel("Size");
 
                     var count = EditorGUILayout.DelayedIntField(layers.Count);
                     layers.SetCount(count, index => index + LayersManager.UnityLayerCount, index => "PhysicsLayer" + index);
@@ -32,19 +32,24 @@ namespace a3geek.PhysicsLayers.Editors
 
                 EditorGUILayout.Space();
 
-                var layerIDs = new List<int>(layers.Keys);
+                var layerIDs = new List<LayerID>(layers.Keys);
                 foreach(var layerID in layerIDs)
                 {
                     using(var hori = new EditorGUILayout.HorizontalScope())
                     {
                         var layerName = layers[layerID];
 
-                        EditorGUILayout.LabelField("Layer ID : " + layerID);
+                        EditorGUILayout.PrefixLabel("Layer ID : " + layerID.ID);
                         layers[layerID] = EditorGUILayout.DelayedTextField(layerName);
 
                         if(string.IsNullOrEmpty(layers[layerID]) == true)
                         {
                             layers[layerID] = layerName;
+                        }
+
+                        if(GUILayout.Button("Delete"))
+                        {
+                            layers.Remove(layerID);
                         }
                     }
                 }
@@ -58,15 +63,14 @@ namespace a3geek.PhysicsLayers.Editors
             EditorGUI.indentLevel += 1;
 
             this.collInfosFolders.SetCount(layerInfos.LayerCount, index => true);
-            
-            foreach(var layerIndex in layerInfos.GetEnumerable().Select((layer, index) => new { index, layer }))
-            {
-                var physicsLayer = layerIndex.layer;
-                var i = layerIndex.index;
 
+            var i = 0;
+            foreach(var physicsLayer in layerInfos.GetEnumerable().OrderBy(layer => layer.LayerID))
+            {
                 this.collInfosFolders[i] = EditorGUILayout.Foldout(this.collInfosFolders[i], "Collision : " + physicsLayer.LayerName, true);
                 if(this.collInfosFolders[i] == false)
                 {
+                    i++;
                     continue;
                 }
 
@@ -75,46 +79,44 @@ namespace a3geek.PhysicsLayers.Editors
                 EditorGUI.indentLevel += 1;
                 using(var vert = new EditorGUILayout.VerticalScope())
                 {
+                    var keys = collInfos.Keys.OrderBy(info => info);
+                    var unityKeys = keys.Where(key => key < LayersManager.UnityLayerCount);
+                    var physicsKeys = keys.Where(key => key >= LayersManager.UnityLayerCount);
+
                     EditorGUILayout.LabelField("Layers");
-                    for(var j = 0; j < LayersManager.UnityLayerCount; j++)
+                    foreach(var key in unityKeys)
                     {
-                        var layerColl = physicsLayer[j];
-                        if(layerColl == null)
-                        {
-                            continue;
-                        }
-
-                        var layerID = layerColl.LayerID;
-                        collInfos[layerID] = this.DrawCollInfo(layerID, collInfos[layerID]);
-                    }
-
-                    for(var j = 0; j < i; j++)
-                    {
-                        var layerID = j + LayersManager.UnityLayerCount;
-                        collInfos[layerID] = layerInfos[layerID][i + LayersManager.UnityLayerCount].Collision;
+                        collInfos[key] = this.DrawCollInfo(key, collInfos[key]);
                     }
 
                     EditorGUILayout.Space();
                     EditorGUILayout.LabelField("Physics Layers");
-                    for(var j = i; j < layerInfos.LayerCount; j++)
+                    foreach(var key in physicsKeys)
                     {
-                        var layerID = j + LayersManager.UnityLayerCount;
-                        collInfos[layerID] = this.DrawCollInfo(layerID, collInfos[layerID]);
+                        if(key < physicsLayer.LayerID)
+                        {
+                            collInfos[key] = layerInfos[key][physicsLayer.LayerID].Collision;
+                        }
+                        else
+                        {
+                            collInfos[key] = this.DrawCollInfo(key, collInfos[key]);
+                        }
                     }
                 }
 
-                physicsLayer.UpdateLayerCollisions(collInfos);
+                i++;
+                physicsLayer.Update(collInfos);
                 EditorGUI.indentLevel -= 1;
             }
             
             EditorGUI.indentLevel -= 1;
         }
-
-        private bool DrawCollInfo(int layerID, bool collision)
+        
+        private bool DrawCollInfo(LayerID layerID, bool collision)
         {
             using(var hori = new EditorGUILayout.HorizontalScope())
             {
-                EditorGUILayout.LabelField(this.Target.LayerToName(layerID));
+                EditorGUILayout.PrefixLabel(this.Target.LayerToName(layerID) + " : " + layerID.ID);
                 return EditorGUILayout.Toggle(collision);
             }
         }

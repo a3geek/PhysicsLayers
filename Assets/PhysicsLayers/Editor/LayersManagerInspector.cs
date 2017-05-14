@@ -23,25 +23,25 @@ namespace a3geek.PhysicsLayers.Editors
 
         public override void OnInspectorGUI()
         {
-            var target = this.Target.PhysicsLayerInfos;
+            var physicsLayerInfos = this.Target.PhysicsLayerInfos;
 
             using(var dirtyCheck = new EditorGUI.ChangeCheckScope())
             {
                 this.layersFolder = EditorGUILayout.Foldout(this.layersFolder, "Physics Layers", true);
                 if(this.layersFolder == true)
                 {
-                    var physicsLayers = target.Layers;
+                    var physicsLayers = physicsLayerInfos.Layers;
                     this.DrawPhysicsLayers(physicsLayers);
 
                     if(dirtyCheck.changed == true)
                     {
                         Undo.RecordObject(this.target, "Changed Physics Layers");
-                        this.UpdateLayer(target, physicsLayers);
+                        this.UpdateLayer(physicsLayerInfos, physicsLayers);
                         this.SetDirty();
                     }
                 }
 
-                if(target.LayerCount <= 0)
+                if(physicsLayerInfos.LayerCount <= 0)
                 {
                     return;
                 }
@@ -51,7 +51,7 @@ namespace a3geek.PhysicsLayers.Editors
                 if(this.collInfosFolder == true)
                 {
                     Undo.RecordObject(this.target, "Changed Collision Infos");
-                    this.DrawCollInfos(target);
+                    this.DrawCollInfos(physicsLayerInfos);
                 }
 
                 if(dirtyCheck.changed == true)
@@ -66,13 +66,13 @@ namespace a3geek.PhysicsLayers.Editors
             EditorUtility.SetDirty(this.target);
             Undo.IncrementCurrentGroup();
         }
-
-        private void UpdateLayer(PhysicsLayerInfos target, Dictionary<int, string> physicsLayers)
+        
+        private void UpdateLayer(PhysicsLayerInfos target, Dictionary<LayerID, string> physicsLayers)
         {
-            target.UpdatePhysicsLayers(physicsLayers);
-            
-            physicsLayers.AddRange(this.Target.UnityLayers);
-            target.GetEnumerable().ToList().ForEach(infos => infos.UpdateLayerCollisions(physicsLayers.Keys.ToList()));
+            target.Update(physicsLayers);
+
+            physicsLayers.AddRange(this.Target.UnityLayerInfos.Layers);
+            target.GetEnumerable().ToList().ForEach(infos => infos.Update(physicsLayers.Keys.ToList()));
         }
     }
 }
