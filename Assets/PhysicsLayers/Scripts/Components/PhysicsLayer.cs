@@ -7,47 +7,36 @@ using System.Linq;
 namespace a3geek.PhysicsLayers.Components
 {
     using Common;
-    
+
     [Serializable]
-    public sealed class PhysicsLayer : ILayer
+    public sealed class PhysicsLayer : AbstractLayer
     {
         public LayerCollision this[int layerID]
         {
-            get { return this.collisions.FirstOrDefault(info => info.LayerID == layerID); }
+            get { return this.collisions.FirstOrDefault(coll => coll.LayerID == layerID); }
         }
 
-        public Dictionary<LayerID, bool> CollisionInfos
+        public Dictionary<int, bool> CollisionInfos
         {
             get { return this.collisions.ToDictionary(coll => coll.LayerID, coll => coll.Collision); }
         }
-        public LayerID LayerID
+        public override string LayerName
         {
-            get { return this.layerID; }
-        }
-        public string LayerName
-        {
-            get { return this.key; }
-            internal set { this.key = value ?? this.key; }
+            get { return this.layerName; }
+            internal set { this.layerName = value ?? this.layerName; }
         }
 
         [SerializeField]
-        private string key = "";
-        [SerializeField]
-        private LayerID layerID = null;
+        private string layerName = "";
         [SerializeField]
         private List<LayerCollision> collisions = new List<LayerCollision>();
 
 
-        public PhysicsLayer() : this(LayersManager.UnityLayerCount, "")
+        public override bool IsPhysicsLayer()
         {
+            return true;
         }
 
-        public PhysicsLayer(int layerID, string layerName)
-        {
-            this.layerID = new LayerID(layerID, true);
-            this.LayerName = layerName;
-        }
-        
         public IEnumerable<LayerCollision> GetEnumerable()
         {
             for(var i = 0; i < this.collisions.Count; i++)
@@ -55,46 +44,43 @@ namespace a3geek.PhysicsLayers.Components
                 yield return this.collisions[i];
             }
         }
-        
-        public bool DeleteLayerCollision(LayerID layerID)
-        {
-            return this.collisions.Remove(this[layerID]);
-        }
 
         public bool DeleteLayerCollision(int layerID)
         {
             return this.collisions.Remove(this[layerID]);
         }
 
-        public void Update(List<LayerID> layerIDs)
+        public void Update(IEnumerable<int> layerIDs)
         {
             this.Update(layerIDs, coll => coll.Collision);
         }
-        
-        public void Update(Dictionary<LayerID, bool> collisions)
+
+        public void Update(Dictionary<int, bool> collisions)
         {
-            this.Update(collisions.Keys.ToList(), coll => collisions[coll.LayerID]);
+            this.Update(collisions.Keys, coll => collisions[coll.LayerID]);
         }
 
-        private void Update(List<LayerID> layerIDs, Func<LayerCollision, bool> collGetter)
+        private void Update(IEnumerable<int> layerIDs, Func<LayerCollision, bool> collGetter)
         {
             var ids = this.collisions.ConvertAll(coll => coll.LayerID);
-            layerIDs.ForEach(layerID =>
+
+            foreach(var layerID in layerIDs)
             {
                 ids.Remove(layerID);
 
                 var coll = this[layerID] ?? this.AddLayerCollision(layerID);
                 coll.Collision = collGetter(coll);
-            });
+            }
 
             ids.ForEach(id => this.DeleteLayerCollision(id));
         }
 
-        private LayerCollision AddLayerCollision(LayerID layerID)
+        private LayerCollision AddLayerCollision(int layerID)
         {
-            var layerCollision = new LayerCollision(layerID);
-            this.collisions.Add(layerCollision);
+            var layerCollision = new LayerCollision();
+            layerCollision.LayerID = layerID;
 
+            this.collisions.Add(layerCollision);
             return layerCollision;
         }
     }

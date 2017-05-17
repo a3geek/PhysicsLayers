@@ -9,30 +9,20 @@ namespace a3geek.PhysicsLayers.Components
     [Serializable]
     public sealed class LayerCollision
     {
-        public LayerID LayerID
+        public int LayerID
         {
-            get { return this.layerID == null ? -1 : this.layerID.ID; }
+            get { return this.layerID; }
+            internal set { this.layerID = Mathf.Max(0, value); }
         }
         public bool Collision
         {
             get { return this.collision; }
             internal set { this.collision = value; }
         }
-        
+
         [SerializeField]
-        private LayerID layerID = null;
+        private int layerID = 0;
         [SerializeField]
         private bool collision = true;
-
-        
-        public LayerCollision(LayerID layerID)
-        {
-            this.layerID = layerID;
-        }
-
-        public LayerCollision(LayerID layerID, bool collision) : this(layerID)
-        {
-            this.collision = collision;
-        }
     }
 }

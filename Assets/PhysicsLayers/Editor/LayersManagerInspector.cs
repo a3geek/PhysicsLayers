@@ -39,6 +39,10 @@ namespace a3geek.PhysicsLayers.Editors
                         this.UpdateLayer(physicsLayerInfos, physicsLayers);
                         this.SetDirty();
                     }
+                    else
+                    {
+                        this.UpdateLayer(physicsLayerInfos, physicsLayers);
+                    }
                 }
 
                 if(physicsLayerInfos.LayerCount <= 0)
@@ -67,12 +71,22 @@ namespace a3geek.PhysicsLayers.Editors
             Undo.IncrementCurrentGroup();
         }
         
-        private void UpdateLayer(PhysicsLayerInfos target, Dictionary<LayerID, string> physicsLayers)
+        private void UpdateLayer(PhysicsLayerInfos infos, Dictionary<int, string> physicsLayers)
         {
-            target.Update(physicsLayers);
+            infos.Update(physicsLayers, true);
 
+            physicsLayers = infos.Layers;
             physicsLayers.AddRange(this.Target.UnityLayerInfos.Layers);
-            target.GetEnumerable().ToList().ForEach(infos => infos.Update(physicsLayers.Keys.ToList()));
+
+            this.UpdateLayerCollision(infos, physicsLayers.Keys);
+        }
+
+        private void UpdateLayerCollision(PhysicsLayerInfos infos, IEnumerable<int> layers)
+        {
+            foreach(var layer in infos.GetEnumerable())
+            {
+                layer.Update(layers);
+            }
         }
     }
 }

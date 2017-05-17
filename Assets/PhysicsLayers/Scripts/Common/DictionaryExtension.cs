@@ -8,31 +8,26 @@ namespace a3geek.PhysicsLayers.Common
 {
     public static class DictionaryExtension
     {
-        public static void ForEach<T1, T2>(this Dictionary<T1, T2> source, Action<KeyValuePair<T1, T2>> action)
-        {
-            foreach(var pair in source)
-            {
-                action(pair);
-            }
-        }
-
         public static List<T3> ToList<T1, T2, T3>(this Dictionary<T1, T2> source, Func<KeyValuePair<T1, T2>, T3> converter)
         {
             var list = new List<T3>();
-            source.ForEach(pair => list.Add(converter(pair)));
+            foreach(var pair in source)
+            {
+                list.Add(converter(pair));
+            }
 
             return list;
         }
 
         public static void AddRange<T1, T2>(this Dictionary<T1, T2> source, Dictionary<T1, T2> other)
         {
-            other.ForEach(pair =>
+            foreach(var pair in other)
             {
                 if(source.ContainsKey(pair.Key) == false)
                 {
                     source.Add(pair.Key, pair.Value);
                 }
-            });
+            }
         }
 
         public static void SetCount<T1, T2>(this Dictionary<T1, T2> source, int count, Func<int, T1> defaultKey, Func<int, T2> defaultValue)

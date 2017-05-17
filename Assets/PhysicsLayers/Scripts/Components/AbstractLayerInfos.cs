@@ -19,9 +19,9 @@ namespace a3geek.PhysicsLayers.Components
         }
 
         public abstract int LayerCount { get; }
-        public abstract Dictionary<LayerID, string> Layers { get; }
-        public abstract List<LayerID> LayerIDs { get; }
-        public abstract List<string> LayerNames { get; }
+        public abstract Dictionary<int, string> Layers { get; }
+        public abstract IEnumerable<int> LayerIDs { get; }
+        public abstract IEnumerable<string> LayerNames { get; }
 
         [SerializeField]
         protected List<T> layers = new List<T>();
@@ -36,7 +36,7 @@ namespace a3geek.PhysicsLayers.Components
         public virtual int NameToLayer(string layerName)
         {
             var layer = this[layerName];
-            return layer == null ? -1 : layer.LayerID.ID;
+            return layer == null ? -1 : layer.LayerID;
         }
 
         public virtual IEnumerable<T> GetEnumerable()

@@ -7,32 +7,18 @@ using System.Linq;
 namespace a3geek.PhysicsLayers.Components
 {
     [Serializable]
-    public sealed class UnityLayer : ILayer
+    public sealed class UnityLayer : AbstractLayer
     {
-        public LayerID LayerID
+        public override string LayerName
         {
-            get { return this.layerID; }
-        }
-        public string LayerName
-        {
-            get
-            {
-                return LayerMask.LayerToName(this.LayerID);
-            }
+            get { return LayerMask.LayerToName(this.LayerID); }
+            internal set {; }
         }
 
-        [SerializeField]
-        private LayerID layerID = null;
 
-
-        public UnityLayer()
+        public override bool IsPhysicsLayer()
         {
-            this.layerID = new LayerID(0, false);
-        }
-
-        public UnityLayer(LayerID layerID)
-        {
-            this.layerID = layerID;
+            return false;
         }
     }
 }

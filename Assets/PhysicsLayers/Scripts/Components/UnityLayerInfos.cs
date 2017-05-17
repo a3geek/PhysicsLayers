@@ -13,34 +13,34 @@ namespace a3geek.PhysicsLayers.Components
         {
             get { return this.ValidateLayers.Count(); }
         }
-        public override Dictionary<LayerID, string> Layers
+        public override Dictionary<int, string> Layers
         {
             get { return this.ValidateLayers.ToDictionary(layer => layer.LayerID, layer => layer.LayerName); }
         }
-        public override List<LayerID> LayerIDs
+        public override IEnumerable<int> LayerIDs
         {
-            get { return this.ValidateLayers.Select(layer => layer.LayerID).ToList(); }
+            get { return this.ValidateLayers.Select(layer => layer.LayerID); }
         }
-        public override List<string> LayerNames
+        public override IEnumerable<string> LayerNames
         {
-            get { return this.ValidateLayers.Select(layer => layer.LayerName).ToList(); }
+            get { return this.ValidateLayers.Select(layer => layer.LayerName); }
         }
 
         public int AllLayerCount
         {
             get { return LayersManager.UnityLayerCount; }
         }
-        public Dictionary<LayerID, string> AllLayers
+        public Dictionary<int, string> AllLayers
         {
             get { return this.InternalLayers.ToDictionary(layer => layer.LayerID, layer => layer.LayerName); }
         }
-        public List<LayerID> AllLayerIDs
+        public IEnumerable<int> AllLayerIDs
         {
-            get { return this.InternalLayers.ConvertAll(layer => layer.LayerID); }
+            get { return this.InternalLayers.Select(layer => layer.LayerID); }
         }
-        public List<string> AllLayerNames
+        public IEnumerable<string> AllLayerNames
         {
-            get { return this.InternalLayers.ConvertAll(layer => layer.LayerName); }
+            get { return this.InternalLayers.Select(layer => layer.LayerName); }
         }
 
         private IEnumerable<UnityLayer> ValidateLayers
@@ -50,7 +50,7 @@ namespace a3geek.PhysicsLayers.Components
                 return this.InternalLayers.Where(layer => string.IsNullOrEmpty(layer.LayerName) == false);
             }
         }
-        private List<UnityLayer> InternalLayers
+        private IEnumerable<UnityLayer> InternalLayers
         {
             get
             {
@@ -93,7 +93,10 @@ namespace a3geek.PhysicsLayers.Components
 
                 if(lay == null)
                 {
-                    this.layers.Add(new UnityLayer(new LayerID(i, false)));
+                    lay = new UnityLayer();
+                    lay.LayerID = i;
+
+                    this.layers.Add(lay);
                 }
             }
         }

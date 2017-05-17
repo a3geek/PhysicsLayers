@@ -15,17 +15,17 @@ namespace a3geek.PhysicsLayers.Components
         {
             get { return this.layers.Count; }
         }
-        public override Dictionary<LayerID, string> Layers
+        public override Dictionary<int, string> Layers
         {
             get { return this.layers.ToDictionary(layer => layer.LayerID, layer => layer.LayerName); }
         }
-        public override List<LayerID> LayerIDs
+        public override IEnumerable<int> LayerIDs
         {
-            get { return this.layers.ConvertAll(layer => layer.LayerID); }
+            get { return this.layers.Select(layer => layer.LayerID); }
         }
-        public override List<string> LayerNames
+        public override IEnumerable<string> LayerNames
         {
-            get { return this.layers.ConvertAll(layer => layer.LayerName); }
+            get { return this.layers.Select(layer => layer.LayerName); }
         }
         
         
@@ -33,37 +33,54 @@ namespace a3geek.PhysicsLayers.Components
         {
             this.layers.Remove(this[layerID]);
 
-            this.layers.ForEach(lay =>
+            for(var i = 0; i < this.layers.Count; i++)
             {
-                lay.DeleteLayerCollision(layerID);
+                var layer = this.layers[i];
+                layer.DeleteLayerCollision(layerID);
 
-                if(adjustID == true && lay.LayerID > layerID)
+                if(adjustID == true)
                 {
-                    lay.LayerID.ChangeID(lay.LayerID - 1);
+                    if(layer.LayerID > layerID)
+                    {
+                        layer.LayerID = layer.LayerID - 1;
+                    }
+
+                    foreach(var coll in layer.GetEnumerable())
+                    {
+                        if(coll.LayerID > layerID)
+                        {
+                            coll.LayerID = coll.LayerID - 1;
+                        }
+                    }
                 }
-            });
+            }
         }
 
-        public void Update(Dictionary<LayerID, string> layers, bool adjustID = true)
+        public void Update(Dictionary<int, string> layers, bool adjustID = true)
         {
-            var ids = this.LayerIDs;
+            var ids = this.LayerIDs.ToList();
 
-            layers.ForEach(layer =>
+            foreach(var layer in layers)
             {
                 ids.Remove(layer.Key);
 
                 var lay = this[layer.Key] ?? this.AddPhysicsLayer(layer.Key, layer.Value);
                 lay.LayerName = layer.Value;
-            });
-
-            ids.ForEach(id => this.DeleteLayer(id, adjustID));
+            }
+            
+            foreach(var id in ids.OrderByDescending(id => id))
+            {
+                this.DeleteLayer(id, adjustID);
+            }
         }
         
         private PhysicsLayer AddPhysicsLayer(int layerID, string layerName)
         {
-            var layer = new PhysicsLayer(layerID, layerName);
-            this.layers.Add(layer);
+            var layer = new PhysicsLayer();
+            layer.LayerID = layerID;
+            layer.LayerName = layerName;
 
+            this.layers.Add(layer);
             return layer;
         }
     }

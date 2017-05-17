@@ -47,26 +47,26 @@ namespace a3geek.PhysicsLayers
         }
         public Dictionary<int, string> PhysicsLayers
         {
-            get { return this.PhysicsLayerInfos.Layers.ToDictionary(layer => layer.Key.ID, layer => layer.Value); }
+            get { return this.PhysicsLayerInfos.Layers.ToDictionary(layer => layer.Key, layer => layer.Value); }
         }
-        public List<int> PhysicsLayerIDs
+        public IEnumerable<int> PhysicsLayerIDs
         {
-            get { return this.PhysicsLayerInfos.LayerIDs.ConvertAll(layerID => layerID.ID); }
+            get { return this.PhysicsLayerInfos.LayerIDs.Select(layerID => layerID); }
         }
-        public List<string> PhysicsLayerNames
+        public IEnumerable<string> PhysicsLayerNames
         {
             get { return this.PhysicsLayerInfos.LayerNames; }
         }
         
         public Dictionary<int, string> UnityLayers
         {
-            get { return this.UnityLayerInfos.Layers.ToDictionary(layer => layer.Key.ID, layer => layer.Value); }
+            get { return this.UnityLayerInfos.Layers.ToDictionary(layer => layer.Key, layer => layer.Value); }
         }
-        public List<int> UnityLayerIDs
+        public IEnumerable<int> UnityLayerIDs
         {
-            get { return this.UnityLayerInfos.LayerIDs.ConvertAll(layerID => layerID.ID); }
+            get { return this.UnityLayerInfos.LayerIDs.Select(layerID => layerID); }
         }
-        public List<string> UnityLayerNames
+        public IEnumerable<string> UnityLayerNames
         {
             get { return this.UnityLayerInfos.LayerNames; }
         }
@@ -83,7 +83,7 @@ namespace a3geek.PhysicsLayers
 
             return infos == null ? new Dictionary<int, string>() : infos.GetEnumerable()
                 .Where(info => info.Collision == false)
-                .ToDictionary(info => info.LayerID.ID, info => this.LayerToName(info.LayerID));
+                .ToDictionary(info => info.LayerID, info => this.LayerToName(info.LayerID));
         }
         
         public bool IsPhysicsLayer(int layerID)
@@ -109,8 +109,9 @@ namespace a3geek.PhysicsLayers
 
         public string LayerToName(int layerID)
         {
-            var physics = this.PhysicsLayerInfos.LayerToName(layerID);
-            return string.IsNullOrEmpty(physics) == true ? this.UnityLayerInfos.LayerToName(layerID) : physics;
+            return layerID >= UnityLayerCount ?
+                this.PhysicsLayerInfos.LayerToName(layerID) :
+                this.UnityLayerInfos.LayerToName(layerID);
         }
     }
 }

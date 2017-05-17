@@ -8,7 +8,7 @@ namespace a3geek.PhysicsLayers.Components
 {
     public interface ILayer
     {
-        LayerID LayerID { get; }
+        int LayerID { get; }
         string LayerName { get; }
     }
 }

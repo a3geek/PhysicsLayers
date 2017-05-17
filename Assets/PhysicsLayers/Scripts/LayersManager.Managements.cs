@@ -72,7 +72,7 @@ namespace a3geek.PhysicsLayers
         }
 
         private int SetIgnoreCollisions<T1, T2>(T1 layer, Dictionary<int, List<T2>> layersDic, Action<T2> setter)
-            where T1 : AbstractLayer
+            where T1 : Layers.Abstracts.AbstractLayer
         {
             var layerID = layer.LayerID;
             if(layerID < 0)
