@@ -16,10 +16,7 @@ namespace a3geek.PhysicsLayers.Editors
         {
             get { return (LayersManager)this.target; }
         }
-
-        private bool layersFolder = true;
-        private bool collInfosFolder = true;
-
+        
 
         public override void OnInspectorGUI()
         {
