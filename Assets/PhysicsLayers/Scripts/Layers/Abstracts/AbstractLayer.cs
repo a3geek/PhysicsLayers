@@ -20,34 +20,58 @@ namespace a3geek.PhysicsLayers.Layers.Abstracts
         
         protected virtual void Awake()
         {
-            if(this.AutoManagement == true && this.ManagerInstance != null)
+            if(this.AutoManagement == true)
             {
-                this.Management(this.ManagerInstance);
+                this.Management();
             }
         }
         
         protected virtual void OnDestroy()
         {
-            if(this.AutoManagement == true && this.ManagerInstance != null)
+            if(this.AutoManagement == true)
             {
-                this.UnManagement(this.ManagerInstance);
+                this.UnManagement();
             }
         }
         
         public virtual bool ChangeLayer(int layerID)
         {
-            if(this.ManagerInstance == null || this.IsEnableLayer(this.ManagerInstance, layerID) == false)
+            if(this.IsEnableLayer(this.ManagerInstance, layerID) == false)
             {
                 return false;
             }
 
-            this.ResetIgnoreCollision(this.ManagerInstance);
-            this.UnManagement(this.ManagerInstance);
+            this.ResetIgnoreCollision();
+            this.UnManagement();
 
             this.LayerID = layerID;
-            this.Management(this.ManagerInstance);
+            this.Management();
 
             return true;
+        }
+
+        public virtual void Management()
+        {
+            if(this.ManagerInstance != null)
+            {
+                this.Management(this.ManagerInstance);
+            }
+        }
+
+        public virtual void UnManagement()
+        {
+            if(this.ManagerInstance != null)
+            {
+                this.UnManagement(this.ManagerInstance);
+            }
+        }
+
+        public virtual void ResetIgnoreCollision()
+        {
+            if(this.ManagerInstance != null)
+            {
+                this.ResetIgnoreCollision(this.ManagerInstance);
+            }
         }
 
         protected abstract bool IsEnableLayer(LayersManager manager, int layerID);
