@@ -88,16 +88,16 @@ Unityレイヤーの有効なレイヤー名一覧を取得
 物理レイヤーとUnityレイヤーの両方に対応します
 
 #### `void Managemant(AbstractCollisionLayer<Collider> layer)`
-衝突判定の設定を行い、マネージメント対象化に加える
+衝突判定の設定を行い、マネージメント対象に加える
 
 #### `void Managemant(AbstractCollisionLayer<Collider2D> layer)`
-衝突判定の設定を行い、マネージメント対象化に加える
+衝突判定の設定を行い、マネージメント対象に加える
 
 #### `void UnManagemant(AbstractCollisionLayer<Collider> layer)`
-マネージメント対象化から外す
+マネージメント対象から外す
 
 #### `void UnManagemant(AbstractCollisionLayer<Collider2D> layer)`
-マネージメント対象化から外す
+マネージメント対象から外す
 
 #### `void ResetIgnoreCollision(AbstractCollisionLayer<Collider> layer)`
 衝突判定の設定を初期化する
@@ -138,6 +138,17 @@ Unityの[LayerMask](https://docs.unity3d.com/jp/540/ScriptReference/LayerMask.ht
 #### `bool ChangeLayer(int layerID)`
 レイヤーIDを変更する  
 衝突判定も再設定されます
+
+#### `void Management()`
+衝突判定の設定を手動で行う
+
+#### `void UnManagement()`
+衝突判定の設定を手動でマネージメント対象から外す
+
+#### `bool ResetIgnoreCollision()`
+衝突判定の設定を手動で初期化する
+
+<br />
 
 ## Screenshots
 ![screen shot](./Docs/Screenshot.gif)
