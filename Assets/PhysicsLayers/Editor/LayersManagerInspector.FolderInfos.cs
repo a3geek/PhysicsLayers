@@ -14,7 +14,7 @@ namespace a3geek.PhysicsLayers.Editors
         private class CollInfosFolders
         {
             public bool collision = true;
-            public bool unityLayer = false;
+            public bool unityLayer = true;
             public bool physicsLayer = true;
         }
 

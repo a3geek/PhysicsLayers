@@ -11,9 +11,6 @@ namespace a3geek.PhysicsLayers.Editors
     
     public partial class LayersManagerInspector
     {
-        //private List<bool> collInfosFolders = new List<bool>();
-
-
         private void DrawPhysicsLayers(Dictionary<int, string> layers)
         {
             EditorGUI.indentLevel += 1;

@@ -31,7 +31,7 @@ namespace a3geek.PhysicsLayers
                 out layersDic,
                 out collsDic
             );
-
+            
             this.Clone(layersDic, collsDic);
         }
 
@@ -89,12 +89,13 @@ namespace a3geek.PhysicsLayers
             var keys = new List<int>(layersDic.Keys).Select((key, index) => new { key, index });
             foreach(var layerID1 in keys)
             {
-                var index1 = layerID1.index + +UnityLayerCount;
+                var index1 = layerID1.index + UnityLayerCount;
                 collsDic.Add(index1, new Dictionary<int, bool>());
 
                 foreach(var layerID2 in keys)
                 {
                     collsDic[index1].Add(layerID2.index + UnityLayerCount, !getIgnore(layerID1.key, layerID2.key));
+                    collsDic[index1].Add(layerID2.key, !getIgnore(layerID1.key, layerID2.key));
                 }
             }
 
