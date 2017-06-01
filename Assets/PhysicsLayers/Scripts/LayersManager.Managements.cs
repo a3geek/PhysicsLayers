@@ -82,26 +82,15 @@ namespace a3geek.PhysicsLayers
 
             this.CheckDicKey(layerID);
             
-            if(layerID < UnityLayerCount)
-            {
-                return layerID;
-            }
-
-            var physicsLayer = this.PhysicsLayerInfos[layerID];
-            if(physicsLayer == null)
-            {
-                return -1;
-            }
-
-            var ignoreLayers = this.GetIgnoreLayers(layerID);
-            if(ignoreLayers.Count <= 0)
+            var ignoreLayers = this.GetIgnoreLayerIDs(layerID);
+            if(ignoreLayers.Count() <= 0)
             {
                 return layerID;
             }
 
             foreach(var pair in layersDic)
             {
-                if(ignoreLayers.ContainsKey(pair.Key) == false)
+                if(ignoreLayers.Contains(pair.Key) == false)
                 {
                     continue;
                 }

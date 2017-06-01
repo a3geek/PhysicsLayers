@@ -44,7 +44,7 @@ namespace a3geek.PhysicsLayers.Components
                 yield return this.collisions[i];
             }
         }
-
+        
         public bool DeleteLayerCollision(int layerID)
         {
             return this.collisions.Remove(this[layerID]);

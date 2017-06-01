@@ -76,12 +76,10 @@ namespace a3geek.PhysicsLayers.Components
 
         public override IEnumerable<UnityLayer> GetEnumerable()
         {
-            for(var i = 0; i < this.layers.Count; i++)
+            var layers = this.ValidateLayers;
+            foreach(var layer in layers)
             {
-                if(string.IsNullOrEmpty(this.layers[i].LayerName) == false)
-                {
-                    yield return this.layers[i];
-                }
+                yield return layer;
             }
         }
 

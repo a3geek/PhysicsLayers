@@ -77,13 +77,23 @@ namespace a3geek.PhysicsLayers
         private UnityLayerInfos unityLayerInfos = new UnityLayerInfos();
 
 
-        public Dictionary<int, string> GetIgnoreLayers(int layerID)
+        public IEnumerable<int> GetIgnoreLayerIDs(int layerID)
         {
-            var infos = this.PhysicsLayerInfos[layerID];
+            if(layerID >= 0 && layerID < UnityLayerCount)
+            {
+                return this.PhysicsLayerInfos.GetEnumerable()
+                    .Where(layer =>
+                    {
+                        var layerCollision = layer[layerID];
+                        return layerCollision != null && layerCollision.Collision == false;
+                    })
+                    .Select(layer => layer.LayerID);
+            }
 
-            return infos == null ? new Dictionary<int, string>() : infos.GetEnumerable()
-                .Where(info => info.Collision == false)
-                .ToDictionary(info => info.LayerID, info => this.LayerToName(info.LayerID));
+            var physicsLayer = this.PhysicsLayerInfos[layerID];
+            return physicsLayer == null ? new List<int>() : physicsLayer.GetEnumerable()
+                .Where(layerCollision => layerCollision.Collision == false)
+                .Select(layerCollision => layerCollision.LayerID);
         }
         
         public bool IsPhysicsLayer(int layerID)
