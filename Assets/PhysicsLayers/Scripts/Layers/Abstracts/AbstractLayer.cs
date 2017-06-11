@@ -9,6 +9,7 @@ namespace a3geek.PhysicsLayers.Layers.Abstracts
     [DisallowMultipleComponent]
     public abstract class AbstractLayer : MonoBehaviour
     {
+        public bool Managemented { get; protected set; }
         public abstract int LayerID { get; protected set; }
         public abstract bool AutoManagement { get; }
 
@@ -25,6 +26,14 @@ namespace a3geek.PhysicsLayers.Layers.Abstracts
                 this.Management();
             }
         }
+
+        protected virtual void OnEnable()
+        {
+            if(this.Managemented == false && this.AutoManagement == true)
+            {
+                this.Management();
+            }
+        }
         
         protected virtual void OnDestroy()
         {
@@ -32,6 +41,16 @@ namespace a3geek.PhysicsLayers.Layers.Abstracts
             {
                 this.UnManagement();
             }
+        }
+
+        protected virtual void OnDisable()
+        {
+            if(this.AutoManagement == true)
+            {
+                this.UnManagement();
+            }
+
+            this.Managemented = false;
         }
         
         public virtual bool ChangeLayer(int layerID)
@@ -55,6 +74,7 @@ namespace a3geek.PhysicsLayers.Layers.Abstracts
             if(this.ManagerInstance != null)
             {
                 this.Management(this.ManagerInstance);
+                this.Managemented = true;
             }
         }
 

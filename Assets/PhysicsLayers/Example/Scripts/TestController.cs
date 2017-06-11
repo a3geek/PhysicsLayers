@@ -17,10 +17,22 @@ namespace a3geek.PhysicsLayers.Examples
         [SerializeField]
         private FieldInfo fieldInfo = new FieldInfo();
 
+        private List<AbstractCollisionCallbacks> collisions = new List<AbstractCollisionCallbacks>();
+
 
         void Awake()
         {
             StartCoroutine(this.Spawn());
+        }
+
+        void Update()
+        {
+            if(Input.GetKeyDown(KeyCode.Space))
+            {
+                this.collisions
+                    .FindAll(coll => coll.LayerID == LayersManager.UnityLayerCount)
+                    .ForEach(coll => coll.gameObject.SetActive(!coll.gameObject.activeSelf));
+            }
         }
 
         private IEnumerator Spawn()
@@ -39,6 +51,7 @@ namespace a3geek.PhysicsLayers.Examples
                     obj.transform.parent = parent.transform;
                     
                     obj.GetComponent<Renderer>().material.SetColor("_Color", info.Color);
+                    this.collisions.Add(obj);
 
                     yield return new WaitForSeconds(0f);
                 }
