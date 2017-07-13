@@ -7,7 +7,7 @@ using UnityEditor;
 namespace a3geek.PhysicsLayers.Editors
 {
     using Common;
-    using Components;
+    using Components.InternalManagements;
     
     [CustomEditor(typeof(LayersManager))]
     public partial class LayersManagerInspector : Editor

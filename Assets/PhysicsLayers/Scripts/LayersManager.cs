@@ -9,6 +9,7 @@ namespace a3geek.PhysicsLayers
     using Common;
     using Layers.Abstracts;
     using Components;
+    using Components.InternalManagements;
     
     [DisallowMultipleComponent]
     [AddComponentMenu("a3geek/Physics Layers/Layers Manager")]
@@ -32,78 +33,77 @@ namespace a3geek.PhysicsLayers
         private static LayersManager instance = null;
         #endregion
 
+        public AllLayerInfos AllLayerInfos
+        {
+            get { return this.allLayerInfos; }
+        }
         public PhysicsLayerInfos PhysicsLayerInfos
         {
-            get { return this.physicsLayerInfos; }
+            get { return this.AllLayerInfos.PhysicsLayerInfos; }
         }
         public UnityLayerInfos UnityLayerInfos
         {
-            get { return this.unityLayerInfos; }
+            get { return this.AllLayerInfos.UnityLayerInfos; }
         }
 
         public int PhysicsLayerCount
         {
-            get { return this.PhysicsLayerInfos.LayerCount; }
+            get { return this.AllLayerInfos.PhysicsLayerCount; }
         }
         public Dictionary<int, string> PhysicsLayers
         {
-            get { return this.PhysicsLayerInfos.Layers.ToDictionary(layer => layer.Key, layer => layer.Value); }
+            get { return this.AllLayerInfos.PhysicsLayers; }
         }
         public IEnumerable<int> PhysicsLayerIDs
         {
-            get { return this.PhysicsLayerInfos.LayerIDs.Select(layerID => layerID); }
+            get { return this.AllLayerInfos.PhysicsLayerIDs; }
         }
         public IEnumerable<string> PhysicsLayerNames
         {
-            get { return this.PhysicsLayerInfos.LayerNames; }
+            get { return this.AllLayerInfos.PhysicsLayerNames; }
         }
         
         public Dictionary<int, string> UnityLayers
         {
-            get { return this.UnityLayerInfos.Layers.ToDictionary(layer => layer.Key, layer => layer.Value); }
+            get { return this.AllLayerInfos.UnityLayers; }
         }
         public IEnumerable<int> UnityLayerIDs
         {
-            get { return this.UnityLayerInfos.LayerIDs.Select(layerID => layerID); }
+            get { return this.AllLayerInfos.UnityLayerIDs; }
         }
         public IEnumerable<string> UnityLayerNames
         {
-            get { return this.UnityLayerInfos.LayerNames; }
+            get { return this.AllLayerInfos.UnityLayerNames; }
         }
-        
-        [SerializeField]
-        private PhysicsLayerInfos physicsLayerInfos = new PhysicsLayerInfos();
-        [SerializeField]
-        private UnityLayerInfos unityLayerInfos = new UnityLayerInfos();
 
+        [SerializeField]
+        private AllLayerInfos allLayerInfos = new AllLayerInfos();
+
+        private CollisionInfosSetter collisionInfosSetter = new CollisionInfosSetter();
+
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void Initialize()
+        {
+            var ins = Instance;
+
+            ins.AllLayerInfos.UpdateCache();
+            ins.collisionInfosSetter.AllLayerInfos = ins.AllLayerInfos;
+        }
 
         public IEnumerable<int> GetIgnoreLayerIDs(int layerID)
         {
-            if(layerID >= 0 && layerID < UnityLayerCount)
-            {
-                return this.PhysicsLayerInfos.GetEnumerable()
-                    .Where(layer =>
-                    {
-                        var layerCollision = layer[layerID];
-                        return layerCollision != null && layerCollision.Collision == false;
-                    })
-                    .Select(layer => layer.LayerID);
-            }
-
-            var physicsLayer = this.PhysicsLayerInfos[layerID];
-            return physicsLayer == null ? new List<int>() : physicsLayer.GetEnumerable()
-                .Where(layerCollision => layerCollision.Collision == false)
-                .Select(layerCollision => layerCollision.LayerID);
+            return this.AllLayerInfos.GetIgnoreLayerIDs(layerID);
         }
         
         public bool IsPhysicsLayer(int layerID)
         {
-            return this.PhysicsLayerInfos[layerID] != null;
+            return this.PhysicsLayerIDs.Contains(layerID);
         }
 
         public bool IsUnityLayer(int layerID)
         {
-            return this.UnityLayerInfos[layerID] != null;
+            return this.UnityLayerIDs.Contains(layerID);
         }
 
         public bool IsLayer(int layerID)

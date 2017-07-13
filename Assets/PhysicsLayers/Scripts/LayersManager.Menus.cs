@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System;
 using UnityEngine;
@@ -10,10 +9,6 @@ using UnityEditor;
 
 namespace a3geek.PhysicsLayers
 {
-    using Common;
-    using Layers.Abstracts;
-    using Components;
-
     using LayersDic = Dictionary<int, string>;
     using LayerCollsDic = Dictionary<int, Dictionary<int, bool>>;
 

@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 using System.Linq;
 
-namespace a3geek.PhysicsLayers.Components
+namespace a3geek.PhysicsLayers.Components.InternalManagements
 {
     [Serializable]
     public abstract class AbstractLayer : ILayer

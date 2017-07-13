@@ -4,10 +4,8 @@ using UnityEngine;
 using System;
 using System.Linq;
 
-namespace a3geek.PhysicsLayers.Components
+namespace a3geek.PhysicsLayers.Components.InternalManagements
 {
-    using Common;
-
     [Serializable]
     public sealed class PhysicsLayer : AbstractLayer
     {
