@@ -35,7 +35,15 @@ namespace a3geek.PhysicsLayers
 
         public AllLayerInfos AllLayerInfos
         {
-            get { return this.allLayerInfos; }
+            get
+            {
+                if(this.allLayerInfos.HaveCache == false)
+                {
+                    this.allLayerInfos.UpdateCache();
+                }
+
+                return this.allLayerInfos;
+            }
         }
         public PhysicsLayerInfos PhysicsLayerInfos
         {

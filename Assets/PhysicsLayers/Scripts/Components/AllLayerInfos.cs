@@ -11,6 +11,8 @@ namespace a3geek.PhysicsLayers.Components
     [Serializable]
     public sealed class AllLayerInfos
     {
+        public bool HaveCache { get; set; }
+
         public PhysicsLayerInfos PhysicsLayerInfos
         {
             get { return this.physicsLayerInfos; }
@@ -67,6 +69,8 @@ namespace a3geek.PhysicsLayers.Components
             this.UnityLayers = new Dictionary<int, string>();
             this.UnityLayerIDs = new List<int>();
             this.UnityLayerNames = new List<string>();
+
+            this.HaveCache = false;
         }
 
         public void UpdateCache()
@@ -84,6 +88,8 @@ namespace a3geek.PhysicsLayers.Components
             {
                 this.ignoreLayersCache[layerID] = this.GetIgnoreIDs(layerID);
             }
+
+            this.HaveCache = true;
         }
 
         public IEnumerable<int> GetIgnoreLayerIDs(int layerID)
