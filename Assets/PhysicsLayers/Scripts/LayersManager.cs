@@ -94,6 +94,11 @@ namespace a3geek.PhysicsLayers
         private static void Initialize()
         {
             var ins = Instance;
+            if(ins == null)
+            {
+                return;
+            }
+            DontDestroyOnLoad(ins.gameObject);
 
             ins.AllLayerInfos.UpdateCache();
             ins.collisionInfosSetter.AllLayerInfos = ins.AllLayerInfos;
