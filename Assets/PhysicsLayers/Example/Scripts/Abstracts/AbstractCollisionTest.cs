@@ -17,6 +17,10 @@ namespace a3geek.PhysicsLayers.Examples.Abstracts
         {
             get { return this.layerName ?? (this.layerName = LayersManager.Instance.LayerToName(this.LayerID)); }
         }
+        public override AbstractLayer Layer
+        {
+            get { return this.layer; }
+        }
 
         [Header("Infos")]
         [SerializeField]

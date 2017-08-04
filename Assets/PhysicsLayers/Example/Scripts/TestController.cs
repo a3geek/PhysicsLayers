@@ -33,6 +33,26 @@ namespace a3geek.PhysicsLayers.Examples
                     .FindAll(coll => coll.LayerID == LayersManager.UnityLayerCount)
                     .ForEach(coll => coll.gameObject.SetActive(!coll.gameObject.activeSelf));
             }
+
+            if(Input.GetKeyDown(KeyCode.A))
+            {
+                var colls = this.collisions
+                    .FindAll(coll => coll.LayerID == LayersManager.UnityLayerCount).ToArray();
+
+                System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+                sw.Start();
+
+                //実行時間を知りたい処理.
+                for(var i = 0; i < colls.Length; i++)
+                {
+                    colls[i].Layer.ChangeLayer(33);
+                }
+
+                /// list → 333ms
+
+                sw.Stop();
+                Debug.Log("経過時間:" + sw.ElapsedMilliseconds + "ms");
+            }
         }
 
         private IEnumerator Spawn()

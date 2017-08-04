@@ -13,6 +13,7 @@ namespace a3geek.PhysicsLayers.Examples.Abstracts
     {
         public abstract int LayerID { get; }
         public abstract string LayerName { get; }
+        public abstract AbstractLayer Layer { get; }
         
         [SerializeField, TextArea(5, 25)]
         protected string log = "";
