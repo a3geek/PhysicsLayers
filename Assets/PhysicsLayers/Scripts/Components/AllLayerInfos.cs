@@ -11,7 +11,7 @@ namespace a3geek.PhysicsLayers.Components
     [Serializable]
     public sealed class AllLayerInfos
     {
-        public bool HaveCache { get; set; }
+        public bool Inited { get; set; }
 
         public PhysicsLayerInfos PhysicsLayerInfos
         {
@@ -30,11 +30,11 @@ namespace a3geek.PhysicsLayers.Components
         {
             get; private set;
         }
-        public IEnumerable<int> PhysicsLayerIDs
+        public int[] PhysicsLayerIDs
         {
             get; private set;
         }
-        public IEnumerable<string> PhysicsLayerNames
+        public string[] PhysicsLayerNames
         {
             get; private set;
         }
@@ -43,11 +43,11 @@ namespace a3geek.PhysicsLayers.Components
         {
             get; private set;
         }
-        public IEnumerable<int> UnityLayerIDs
+        public int[] UnityLayerIDs
         {
             get; private set;
         }
-        public IEnumerable<string> UnityLayerNames
+        public string[] UnityLayerNames
         {
             get; private set;
         }
@@ -57,50 +57,50 @@ namespace a3geek.PhysicsLayers.Components
         [SerializeField]
         private UnityLayerInfos unityLayerInfos = new UnityLayerInfos();
 
-        private Dictionary<int, IEnumerable<int>> ignoreLayersCache = new Dictionary<int, IEnumerable<int>>();
+        private Dictionary<int, int[]> ignoreLayersCache = new Dictionary<int, int[]>();
 
 
         public AllLayerInfos()
         {
             this.PhysicsLayers = new Dictionary<int, string>();
-            this.PhysicsLayerIDs = new List<int>();
-            this.PhysicsLayerNames = new List<string>();
+            this.PhysicsLayerIDs = new int[0];
+            this.PhysicsLayerNames = new string[0];
 
             this.UnityLayers = new Dictionary<int, string>();
-            this.UnityLayerIDs = new List<int>();
-            this.UnityLayerNames = new List<string>();
+            this.UnityLayerIDs = new int[0];
+            this.UnityLayerNames = new string[0];
 
-            this.HaveCache = false;
+            this.Inited = false;
         }
 
-        public void UpdateCache()
+        public void Initialize()
         {
             this.PhysicsLayerCount = this.PhysicsLayerInfos.LayerCount;
             this.PhysicsLayers = this.PhysicsLayerInfos.Layers;
-            this.PhysicsLayerIDs = this.PhysicsLayerInfos.LayerIDs;
-            this.PhysicsLayerNames = this.PhysicsLayerInfos.LayerNames;
+            this.PhysicsLayerIDs = this.PhysicsLayerInfos.LayerIDs.ToArray();
+            this.PhysicsLayerNames = this.PhysicsLayerInfos.LayerNames.ToArray();
 
             this.UnityLayers = this.UnityLayerInfos.Layers;
-            this.UnityLayerIDs = this.UnityLayerInfos.LayerIDs;
-            this.UnityLayerNames = this.UnityLayerInfos.LayerNames;
+            this.UnityLayerIDs = this.UnityLayerInfos.LayerIDs.ToArray();
+            this.UnityLayerNames = this.UnityLayerInfos.LayerNames.ToArray();
             
             foreach(var layerID in this.UnityLayerIDs.Concat(this.PhysicsLayerIDs))
             {
                 this.ignoreLayersCache[layerID] = this.GetIgnoreIDs(layerID);
             }
 
-            this.HaveCache = true;
+            this.Inited = true;
         }
 
-        public IEnumerable<int> GetIgnoreLayerIDs(int layerID)
+        public int[] GetIgnoreLayerIDs(int layerID)
         {
-            IEnumerable<int> ie = null;
-            this.ignoreLayersCache.TryGetValue(layerID, out ie);
+            int[] array = null;
+            this.ignoreLayersCache.TryGetValue(layerID, out array);
             
-            return ie ?? new List<int>();
+            return array ?? new int[0];
         }
 
-        private IEnumerable<int> GetIgnoreIDs(int layerID)
+        private int[] GetIgnoreIDs(int layerID)
         {
             if(layerID < LayersManager.UnityLayerCount)
             {
@@ -110,13 +110,15 @@ namespace a3geek.PhysicsLayers.Components
                         var layerCollision = layer[layerID];
                         return layerCollision != null && layerCollision.Collision == false;
                     })
-                    .Select(layer => layer.LayerID);
+                    .Select(layer => layer.LayerID)
+                    .ToArray();
             }
 
             var physicsLayer = this.PhysicsLayerInfos[layerID];
-            return physicsLayer == null ? new List<int>() : physicsLayer.GetEnumerable()
+            return physicsLayer == null ? new int[0] : physicsLayer.GetEnumerable()
                 .Where(layerCollision => layerCollision.Collision == false)
-                .Select(layerCollision => layerCollision.LayerID);
+                .Select(layerCollision => layerCollision.LayerID)
+                .ToArray();
         }
     }
 }

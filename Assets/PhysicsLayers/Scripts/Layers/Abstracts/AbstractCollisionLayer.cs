@@ -8,35 +8,41 @@ namespace a3geek.PhysicsLayers.Layers.Abstracts
 {
     public abstract class AbstractCollisionLayer<T> : AbstractLayer where T : Component
     {
-        public List<T> Colliders
+        public T[] Colliders
         {
             get { return this.colliders; }
         }
         
         [SerializeField]
-        protected List<T> colliders = new List<T>();
+        protected T[] colliders = new T[0];
         
         
         public virtual void IgnoreCollision(T otherCollider, bool ignore)
         {
-            this.Colliders.ForEach(coll => this.IgnoreCollision(coll, otherCollider, ignore));
+            for(var i = 0; i < this.colliders.Length; i++)
+            {
+                this.IgnoreCollision(this.colliders[i], otherCollider, ignore);
+            }
         }
 
-        public virtual void IgnoreCollisions(List<T> otherColliders, bool ignore)
+        public virtual void IgnoreCollisions(T[] otherColliders, bool ignore)
         {
-            otherColliders.ForEach(coll => this.IgnoreCollision(coll, ignore));
+            for(var i = 0; i < otherColliders.Length; i++)
+            {
+                this.IgnoreCollision(otherColliders[i], ignore);
+            }
         }
 
         [ContextMenu("Get Colliders")]
         protected virtual void GetColliders()
         {
-            this.colliders = GetComponents<T>().ToList();
+            this.colliders = GetComponents<T>();
         }
 
         [ContextMenu("Get Colliders In Children")]
         protected virtual void GetCollidersInChildren()
         {
-            this.colliders = GetComponentsInChildren<T>().ToList();
+            this.colliders = GetComponentsInChildren<T>();
         }
         
         protected abstract void IgnoreCollision(T collider1, T collider2, bool ignore);

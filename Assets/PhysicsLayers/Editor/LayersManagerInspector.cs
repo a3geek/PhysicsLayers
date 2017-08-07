@@ -65,7 +65,7 @@ namespace a3geek.PhysicsLayers.Editors
         private new void SetDirty()
         {
             EditorUtility.SetDirty(this.target);
-            this.Target.AllLayerInfos.HaveCache = false;
+            this.Target.AllLayerInfos.Inited = false;
 
             Undo.IncrementCurrentGroup();
         }

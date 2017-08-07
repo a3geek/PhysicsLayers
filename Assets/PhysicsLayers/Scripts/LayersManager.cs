@@ -37,9 +37,9 @@ namespace a3geek.PhysicsLayers
         {
             get
             {
-                if(this.allLayerInfos.HaveCache == false)
+                if(this.allLayerInfos.Inited == false)
                 {
-                    this.allLayerInfos.UpdateCache();
+                    this.allLayerInfos.Initialize();
                 }
 
                 return this.allLayerInfos;
@@ -86,8 +86,12 @@ namespace a3geek.PhysicsLayers
 
         [SerializeField]
         private AllLayerInfos allLayerInfos = new AllLayerInfos();
+        [SerializeField]
+        private int cacheCapacity = 250;
+        [SerializeField]
+        private float compactionInterval = 60f;
 
-        private CollisionInfosSetter collisionInfosSetter = new CollisionInfosSetter();
+        private CollisionInfosSetter collisionInfosSetter = null;
 
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -99,9 +103,9 @@ namespace a3geek.PhysicsLayers
                 return;
             }
             DontDestroyOnLoad(ins.gameObject);
-
-            ins.AllLayerInfos.UpdateCache();
-            ins.collisionInfosSetter.AllLayerInfos = ins.AllLayerInfos;
+            
+            ins.AllLayerInfos.Initialize();
+            ins.collisionInfosSetter = new CollisionInfosSetter(ins);
         }
 
         public IEnumerable<int> GetIgnoreLayerIDs(int layerID)
