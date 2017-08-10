@@ -62,11 +62,11 @@ namespace a3geek.PhysicsLayers
         {
             get { return this.AllLayerInfos.PhysicsLayers; }
         }
-        public IEnumerable<int> PhysicsLayerIDs
+        public int[] PhysicsLayerIDs
         {
             get { return this.AllLayerInfos.PhysicsLayerIDs; }
         }
-        public IEnumerable<string> PhysicsLayerNames
+        public string[] PhysicsLayerNames
         {
             get { return this.AllLayerInfos.PhysicsLayerNames; }
         }
@@ -75,11 +75,11 @@ namespace a3geek.PhysicsLayers
         {
             get { return this.AllLayerInfos.UnityLayers; }
         }
-        public IEnumerable<int> UnityLayerIDs
+        public int[] UnityLayerIDs
         {
             get { return this.AllLayerInfos.UnityLayerIDs; }
         }
-        public IEnumerable<string> UnityLayerNames
+        public string[] UnityLayerNames
         {
             get { return this.AllLayerInfos.UnityLayerNames; }
         }
