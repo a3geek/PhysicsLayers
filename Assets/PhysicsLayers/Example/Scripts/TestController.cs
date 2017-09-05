@@ -38,25 +38,7 @@ namespace a3geek.PhysicsLayers.Examples
             {
                 var colls = this.collisions
                     .FindAll(coll => coll.LayerID == LayersManager.UnityLayerCount).ToArray();
-
-                System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-                sw.Start();
-
-                //実行時間を知りたい処理.
-                for(var i = 0; i < colls.Length; i++)
-                {
-                    colls[i].Layer.ChangeLayer(33);
-                }
-
-                // list → 333ms
-                // Array -> 23ms
-
-                // 100で333ms → 3.33ms / 1
-                // 100で25ms → 0.25ms / 1
                 
-                sw.Stop();
-                Debug.Log("経過時間:" + sw.ElapsedMilliseconds + "ms");
-
                 for(var i = 0; i < colls.Length; i++)
                 {
                     colls[i].UpdateIgnoreLayers();
