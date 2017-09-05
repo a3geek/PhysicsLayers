@@ -11,6 +11,8 @@ namespace a3geek.PhysicsLayers.Components
     [Serializable]
     public sealed class AllLayerInfos
     {
+        public readonly int[] ZeroIntArray = new int[0];
+
         public bool Inited { get; set; }
 
         public PhysicsLayerInfos PhysicsLayerInfos
@@ -97,7 +99,7 @@ namespace a3geek.PhysicsLayers.Components
             int[] array = null;
             this.ignoreLayersCache.TryGetValue(layerID, out array);
             
-            return array ?? new int[0];
+            return array ?? ZeroIntArray;
         }
 
         private int[] GetIgnoreIDs(int layerID)

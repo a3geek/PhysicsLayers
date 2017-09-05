@@ -6,10 +6,14 @@ using System.Linq;
 
 namespace a3geek.PhysicsLayers.Layers.Abstracts
 {
+    using Common;
+
     [DisallowMultipleComponent]
-    public abstract class AbstractLayer : MonoBehaviour
+    public abstract class AbstractLayer : MonoBehaviour, ICacheableClass
     {
+        public int CacheIndex { get; set; }
         public bool Managemented { get; protected set; }
+
         public abstract int LayerID { get; protected set; }
         public abstract bool AutoManagement { get; }
 
@@ -21,6 +25,8 @@ namespace a3geek.PhysicsLayers.Layers.Abstracts
         
         protected virtual void Awake()
         {
+            this.CacheIndex = -1;
+
             if(this.AutoManagement == true)
             {
                 this.Management();

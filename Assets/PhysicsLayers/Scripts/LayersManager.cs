@@ -89,9 +89,10 @@ namespace a3geek.PhysicsLayers
         [SerializeField]
         private int cacheCapacity = 250;
         [SerializeField]
-        private float compactionInterval = 60f;
+        private float compactionInterval = 1f;
 
         private CollisionInfosSetter collisionInfosSetter = null;
+        private IntervalExecutor compactionExecutor = null;
 
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -103,7 +104,9 @@ namespace a3geek.PhysicsLayers
                 return;
             }
             DontDestroyOnLoad(ins.gameObject);
-            
+
+            ins.compactionExecutor = new IntervalExecutor(ins.compactionInterval);
+
             ins.AllLayerInfos.Initialize();
             ins.collisionInfosSetter = new CollisionInfosSetter(ins);
         }

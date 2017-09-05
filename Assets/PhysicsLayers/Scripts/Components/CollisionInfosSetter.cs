@@ -15,40 +15,32 @@ namespace a3geek.PhysicsLayers
     {
         public sealed class CollisionInfosSetter
         {
-            private LayersManager manager = null;
-
             private Dictionary<int, CacheableArray<AbsCollLayer2D>> collLayers2D = new Dictionary<int, CacheableArray<AbsCollLayer2D>>();
             private Dictionary<int, CacheableArray<AbsCollLayer>> collLayers = new Dictionary<int, CacheableArray<AbsCollLayer>>();
 
+            private LayersManager manager = null;
+            
 
             public CollisionInfosSetter(LayersManager manager)
             {
                 this.manager = manager;
-
-                var capacity = manager.cacheCapacity;
+                
                 var unityIDs = manager.UnityLayerIDs;
                 for(var i = 0; i < unityIDs.Length; i++)
                 {
-                    this.collLayers.Add(unityIDs[i], new CacheableArray<AbsCollLayer>(capacity));
-                    this.collLayers2D.Add(unityIDs[i], new CacheableArray<AbsCollLayer2D>(capacity));
+                    this.AddCollLayer(unityIDs[i]);
                 }
 
                 var physicsIDs = manager.PhysicsLayerIDs;
                 for(var i = 0; i < physicsIDs.Length; i++)
                 {
-                    this.collLayers.Add(physicsIDs[i], new CacheableArray<AbsCollLayer>(capacity));
-                    this.collLayers2D.Add(physicsIDs[i], new CacheableArray<AbsCollLayer2D>(capacity));
+                    this.AddCollLayer(physicsIDs[i]);
                 }
             }
-
+            
             public void Management(AbsCollLayer layer)
             {
                 var layerID = this.SetIgnoreCollisions(layer, this.collLayers, lay => layer.IgnoreCollisions(lay.Colliders, true));
-                if(layerID < 0)
-                {
-                    return;
-                }
-
                 this.collLayers[layerID].Add(layer);
             }
 
@@ -108,6 +100,15 @@ namespace a3geek.PhysicsLayers
                 }
                 
                 return layerID;
+            }
+
+            private void AddCollLayer(int id)
+            {
+                this.collLayers.Add(id, new CacheableArray<AbsCollLayer>(this.manager.cacheCapacity));
+                this.collLayers2D.Add(id, new CacheableArray<AbsCollLayer2D>(this.manager.cacheCapacity));
+
+                this.manager.compactionExecutor.AddAction(() => this.collLayers[id].CacheCompaction());
+                this.manager.compactionExecutor.AddAction(() => this.collLayers2D[id].CacheCompaction());
             }
         }
     }

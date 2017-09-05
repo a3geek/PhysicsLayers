@@ -8,6 +8,7 @@ namespace a3geek.PhysicsLayers.Editors
 {
     using Common;
     using Components.InternalManagements;
+    using Common.Extensions;
     
     public partial class LayersManagerInspector
     {

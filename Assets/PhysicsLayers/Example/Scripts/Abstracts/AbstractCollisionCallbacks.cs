@@ -24,6 +24,11 @@ namespace a3geek.PhysicsLayers.Examples.Abstracts
 
         protected virtual void Awake()
         {
+            this.UpdateIgnoreLayers();
+        }
+
+        public virtual void UpdateIgnoreLayers()
+        {
             this.ignoreLayers = LayersManager.Instance
                 .GetIgnoreLayerIDs(this.LayerID)
                 .Select(layerID => LayersManager.Instance.LayerToName(layerID))

@@ -6,18 +6,18 @@ using UnityEngine;
 
 namespace a3geek.PhysicsLayers.Common
 {
-    public sealed class CacheableArray<T> where T : class
+    public sealed class CacheableArray<T> where T : class, ICacheableClass
     {
         public T this[int index]
         {
             get { return this.array[index]; }
-            set { this.array[index] = value; }
         }
 
         public int Capacity { get; private set; }
         public int Tail { get; private set; }
 
         private T[] array = null;
+        private bool removed = false;
 
 
         public CacheableArray(int capacity)
@@ -36,11 +36,21 @@ namespace a3geek.PhysicsLayers.Common
                 Array.Resize(ref this.array, checked(this.Capacity));
             }
 
-            this.array[this.Tail++] = item;
+            var tail = this.Tail++;
+            this.array[tail] = item;
+            item.CacheIndex = tail;
         }
 
         public void Remove(T item)
         {
+            this.removed = true;
+
+            if(item.CacheIndex >= 0 && item.CacheIndex < this.array.Length)
+            {
+                this.array[item.CacheIndex] = null;
+                return;
+            }
+
             for(var i = 0; i < this.array.Length; i++)
             {
                 if(this.array[i] == item)
@@ -52,8 +62,13 @@ namespace a3geek.PhysicsLayers.Common
             }
         }
 
-        public void CacheCompaction()
+        public void CacheCompaction(bool force = false)
         {
+            if(this.removed == false && force == false)
+            {
+                return;
+            }
+
             var arr = this.array;
             var j = this.Tail - 1;
 
@@ -66,8 +81,9 @@ namespace a3geek.PhysicsLayers.Common
                         if(arr[j] != null)
                         {
                             arr[i] = arr[j];
-                            arr[j] = null;
+                            arr[i].CacheIndex = i;
 
+                            arr[j] = null;
                             break;
                         }
                     }
@@ -80,6 +96,8 @@ namespace a3geek.PhysicsLayers.Common
                     }
                 }
             }
+
+            this.removed = false;
         }
     }
 }

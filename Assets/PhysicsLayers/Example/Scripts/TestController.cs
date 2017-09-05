@@ -48,10 +48,19 @@ namespace a3geek.PhysicsLayers.Examples
                     colls[i].Layer.ChangeLayer(33);
                 }
 
-                /// list → 333ms
+                // list → 333ms
+                // Array -> 23ms
 
+                // 100で333ms → 3.33ms / 1
+                // 100で25ms → 0.25ms / 1
+                
                 sw.Stop();
                 Debug.Log("経過時間:" + sw.ElapsedMilliseconds + "ms");
+
+                for(var i = 0; i < colls.Length; i++)
+                {
+                    colls[i].UpdateIgnoreLayers();
+                }
             }
         }
 

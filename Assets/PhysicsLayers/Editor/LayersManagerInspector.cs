@@ -6,7 +6,7 @@ using UnityEditor;
 
 namespace a3geek.PhysicsLayers.Editors
 {
-    using Common;
+    using Common.Extensions;
     using Components.InternalManagements;
     
     [CustomEditor(typeof(LayersManager))]
