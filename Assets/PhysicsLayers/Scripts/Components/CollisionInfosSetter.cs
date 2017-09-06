@@ -107,8 +107,15 @@ namespace a3geek.PhysicsLayers
                 this.collLayers.Add(id, new CacheableArray<AbsCollLayer>(this.manager.cacheCapacity));
                 this.collLayers2D.Add(id, new CacheableArray<AbsCollLayer2D>(this.manager.cacheCapacity));
 
-                this.manager.compactionExecutor.AddAction(() => this.collLayers[id].CacheCompaction());
-                this.manager.compactionExecutor.AddAction(() => this.collLayers2D[id].CacheCompaction());
+                this.manager.compactionExecutor.AddAction(() =>
+                {
+                    this.collLayers[id].CacheCompaction();
+                });
+                
+                this.manager.compactionExecutor.AddAction(() =>
+                {
+                    this.collLayers2D[id].CacheCompaction();
+                });
             }
         }
     }

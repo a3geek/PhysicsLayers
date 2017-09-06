@@ -111,6 +111,11 @@ namespace a3geek.PhysicsLayers
             ins.collisionInfosSetter = new CollisionInfosSetter(ins);
         }
 
+        private void Update()
+        {
+            this.compactionExecutor.Update();
+        }
+
         public IEnumerable<int> GetIgnoreLayerIDs(int layerID)
         {
             return this.AllLayerInfos.GetIgnoreLayerIDs(layerID);

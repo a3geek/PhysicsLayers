@@ -35,6 +35,7 @@ namespace a3geek.PhysicsLayers.Common
             {
                 this.actions[this.index]();
 
+                this.timer = 0f;
                 this.index++;
                 if(this.index >= this.actions.Count)
                 {
