@@ -1,17 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System;
 using UnityEngine;
 
 namespace a3geek.PhysicsLayers
 {
     using Common;
-    using Layers.Abstracts;
     using Components;
     using Components.InternalManagements;
-    
+
     [DisallowMultipleComponent]
+    [DefaultExecutionOrder(-3200)]
     [AddComponentMenu("a3geek/Physics Layers/Layers Manager")]
     public sealed partial class LayersManager : MonoBehaviour
     {
@@ -93,22 +91,16 @@ namespace a3geek.PhysicsLayers
 
         private CollisionInfosSetter collisionInfosSetter = null;
         private IntervalExecutor compactionExecutor = null;
+        
 
-
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        private static void Initialize()
+        private void Awake()
         {
-            var ins = Instance;
-            if(ins == null)
-            {
-                return;
-            }
-            DontDestroyOnLoad(ins.gameObject);
+            DontDestroyOnLoad(gameObject);
 
-            ins.compactionExecutor = new IntervalExecutor(ins.compactionInterval);
+            this.compactionExecutor = new IntervalExecutor(this.compactionInterval);
 
-            ins.AllLayerInfos.Initialize();
-            ins.collisionInfosSetter = new CollisionInfosSetter(ins);
+            this.AllLayerInfos.Initialize();
+            this.collisionInfosSetter = new CollisionInfosSetter(this);
         }
 
         private void Update()
