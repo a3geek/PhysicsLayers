@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using Random = UnityEngine.Random;
 
-namespace a3geek.PhysicsLayers.Examples
+namespace PhysicsLayers.Examples
 {
     using Abstracts;
     using Layers.Abstracts;

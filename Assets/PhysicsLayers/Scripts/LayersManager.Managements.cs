@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace a3geek.PhysicsLayers
+namespace PhysicsLayers
 {
     using AbsCollLayer = Layers.Abstracts.AbstractCollisionLayer<Collider>;
     using AbsCollLayer2D = Layers.Abstracts.AbstractCollisionLayer<Collider2D>;

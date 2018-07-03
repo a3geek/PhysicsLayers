@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 using System.Linq;
 
-namespace a3geek.PhysicsLayers.Layers.Abstracts
+namespace PhysicsLayers.Layers.Abstracts
 {
     using Common;
 

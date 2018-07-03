@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 using System.Linq;
 
-namespace a3geek.PhysicsLayers.Components
+namespace PhysicsLayers.Components
 {
     using InternalManagements;
 

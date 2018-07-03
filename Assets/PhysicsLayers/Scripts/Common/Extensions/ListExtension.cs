@@ -4,7 +4,7 @@ using System.Linq;
 using System;
 using UnityEngine;
 
-namespace a3geek.PhysicsLayers.Common.Extensions
+namespace PhysicsLayers.Common.Extensions
 {
     public static class ListExtension
     {

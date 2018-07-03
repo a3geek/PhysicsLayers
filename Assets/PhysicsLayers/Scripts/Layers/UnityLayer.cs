@@ -4,12 +4,12 @@ using UnityEngine;
 using System;
 using System.Linq;
 
-namespace a3geek.PhysicsLayers.Layers
+namespace PhysicsLayers.Layers
 {
     using Abstracts;
     using Attributes;
 
-    [AddComponentMenu("a3geek/Physics Layers/Layers/Unity Layer")]
+    [AddComponentMenu("Physics Layers/Layers/Unity Layer")]
     public class UnityLayer : AbstractColliderLayer
     {
         public override int LayerID

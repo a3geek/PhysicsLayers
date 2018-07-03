@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 using System.Linq;
 
-namespace a3geek.PhysicsLayers.Layers.Abstracts
+namespace PhysicsLayers.Layers.Abstracts
 {
     public abstract class AbstractCollider2DLayer : AbstractCollisionLayer<Collider2D>
     {

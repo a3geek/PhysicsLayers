@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-namespace a3geek.PhysicsLayers.Examples.Abstracts
+namespace PhysicsLayers.Examples.Abstracts
 {
     using Layers.Abstracts;
 

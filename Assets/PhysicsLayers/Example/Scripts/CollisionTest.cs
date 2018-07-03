@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-namespace a3geek.PhysicsLayers.Examples
+namespace PhysicsLayers.Examples
 {
     using System;
     using Abstracts;

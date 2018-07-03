@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-namespace a3geek.PhysicsLayers
+namespace PhysicsLayers
 {
     public struct PhysicsLayerMask
     {

@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEngine;
 
-namespace a3geek.PhysicsLayers
+namespace PhysicsLayers
 {
     using Common;
     using Components;
@@ -10,7 +10,7 @@ namespace a3geek.PhysicsLayers
 
     [DisallowMultipleComponent]
     [DefaultExecutionOrder(-3200)]
-    [AddComponentMenu("a3geek/Physics Layers/Layers Manager")]
+    [AddComponentMenu("Physics Layers/Layers Manager")]
     public sealed partial class LayersManager : MonoBehaviour
     {
         public const int UnityLayerCount = 32;

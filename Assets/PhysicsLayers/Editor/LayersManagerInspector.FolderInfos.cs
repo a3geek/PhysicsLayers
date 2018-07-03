@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEditor;
 
-namespace a3geek.PhysicsLayers.Editors
+namespace PhysicsLayers.Editors
 {
     using Common;
     using Components;

@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-namespace a3geek.PhysicsLayers
+namespace PhysicsLayers
 {
     using LayersDic = Dictionary<int, string>;
     using LayerCollsDic = Dictionary<int, Dictionary<int, bool>>;

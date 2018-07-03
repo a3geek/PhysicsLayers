@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-namespace a3geek.PhysicsLayers.Attributes
+namespace PhysicsLayers.Attributes
 {
     public class PhysicsLayerAttribute : PropertyAttribute
     {
