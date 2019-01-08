@@ -42,6 +42,9 @@ Unityレイヤーはカメラレイヤーと物理レイヤーの二つの用途
 #### `const int UnityLayerCount = 32`
 Unityレイヤーのレイヤー数
 
+#### `const int ExecutionOrder = -30000`
+LayersManagerコンポーネントの実行タイミング
+
 #### `PhysicsLayerInfos PhysicsLayerInfos { get; }`
 物理レイヤーに関する情報をまとめるクラスのインスタンスを取得
 
@@ -67,6 +70,10 @@ Unityレイヤーの有効なレイヤーID一覧を取得
 Unityレイヤーの有効なレイヤー名一覧を取得
 
 ### メソッド
+#### `void UpdateParams(int cacheCapacity = -1, float compactionInterval = -1f)`
+Layerごとの初期キャッシュ数と、コンパクションをおこなうインターバルを設定  
+`LayersManager.ExecutionOrder`より前のタイミングで呼び出すことで、初期値を実行時にプログラムから変更できる
+
 #### `Dictionary<int, string> GetIgnoreLayers(int layerID)`
 レイヤーIDが衝突しないレイヤーを一覧で取得
 
