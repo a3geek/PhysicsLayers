@@ -22,6 +22,9 @@ namespace PhysicsLayers.Editors
         {
             var physicsLayerInfos = this.Target.PhysicsLayerInfos;
 
+            base.OnInspectorGUI();
+            EditorGUILayout.Space();
+
             using(var dirtyCheck = new EditorGUI.ChangeCheckScope())
             {
                 this.layersFolder = EditorGUILayout.Foldout(this.layersFolder, "Physics Layers", true);

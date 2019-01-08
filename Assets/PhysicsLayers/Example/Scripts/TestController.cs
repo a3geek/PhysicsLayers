@@ -10,27 +10,38 @@ namespace PhysicsLayers.Examples
     using Abstracts;
     using Layers.Abstracts;
 
-    [DisallowMultipleComponent]
     [AddComponentMenu("")]
+    [DisallowMultipleComponent]
+    [DefaultExecutionOrder(LayersManager.ExecutionOrder - 2000)]
     public class TestController : MonoBehaviour
     {
         [SerializeField]
         private FieldInfo fieldInfo = new FieldInfo();
+        [Space]
         [SerializeField]
         private bool autoRespawn = true;
         [SerializeField, Range(0f, 1f)]
         private float respawnRate = 0.05f;
+        [SerializeField, Range(0, 10000)]
+        private int cacheCapacity = 250;
+        [SerializeField, Range(0f, 60f)]
+        private float compactionInterval = 1f;
         
         private bool spawned = false;
         private Dictionary<int, List<AbstractCollisionCallbacks>> collisions = new Dictionary<int, List<AbstractCollisionCallbacks>>();
 
 
-        void Awake()
+        private void Awake()
+        {
+            LayersManager.Instance.UpdateParams(this.cacheCapacity, compactionInterval);
+        }
+
+        private void Start()
         {
             StartCoroutine(this.Spawn());
         }
 
-        void Update()
+        private void Update()
         {
             if(this.spawned == false)
             {

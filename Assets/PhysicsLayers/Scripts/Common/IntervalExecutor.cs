@@ -10,10 +10,12 @@ namespace PhysicsLayers.Common
     {
         public float Interval
         {
-            get; private set;
+            get { return this.interval; }
+            set { this.interval = Mathf.Abs(value); }
         }
 
         private List<Action> actions = new List<Action>();
+        private float interval = 0f;
         private float timer = 0f;
         private int index = 0;
 

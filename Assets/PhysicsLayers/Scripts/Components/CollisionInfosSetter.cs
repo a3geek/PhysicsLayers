@@ -104,8 +104,8 @@ namespace PhysicsLayers
 
             private void AddCollLayer(int id)
             {
-                this.collLayers.Add(id, new CacheableArray<AbsCollLayer>(this.manager.cacheCapacity));
-                this.collLayers2D.Add(id, new CacheableArray<AbsCollLayer2D>(this.manager.cacheCapacity));
+                this.collLayers.Add(id, new CacheableArray<AbsCollLayer>(this.manager.cacheCapacityPerLayer));
+                this.collLayers2D.Add(id, new CacheableArray<AbsCollLayer2D>(this.manager.cacheCapacityPerLayer));
 
                 this.manager.compactionExecutor.AddAction(() =>
                 {

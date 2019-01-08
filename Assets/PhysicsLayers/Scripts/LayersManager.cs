@@ -9,11 +9,12 @@ namespace PhysicsLayers
     using Components.InternalManagements;
 
     [DisallowMultipleComponent]
-    [DefaultExecutionOrder(-3200)]
+    [DefaultExecutionOrder(ExecutionOrder)]
     [AddComponentMenu("Physics Layers/Layers Manager")]
     public sealed partial class LayersManager : MonoBehaviour
     {
         public const int UnityLayerCount = 32;
+        public const int ExecutionOrder = -30000;
 
         #region "Singleton"
         public static LayersManager Instance
@@ -83,11 +84,11 @@ namespace PhysicsLayers
         }
 
         [SerializeField]
-        private AllLayerInfos allLayerInfos = new AllLayerInfos();
-        [SerializeField]
-        private int cacheCapacity = 250;
+        private int cacheCapacityPerLayer = 250;
         [SerializeField]
         private float compactionInterval = 1f;
+        [SerializeField, HideInInspector]
+        private AllLayerInfos allLayerInfos = new AllLayerInfos();
 
         private CollisionInfosSetter collisionInfosSetter = null;
         private IntervalExecutor compactionExecutor = null;
@@ -98,7 +99,6 @@ namespace PhysicsLayers
             DontDestroyOnLoad(gameObject);
 
             this.compactionExecutor = new IntervalExecutor(this.compactionInterval);
-
             this.AllLayerInfos.Initialize();
             this.collisionInfosSetter = new CollisionInfosSetter(this);
         }
@@ -106,6 +106,17 @@ namespace PhysicsLayers
         private void Update()
         {
             this.compactionExecutor.Update();
+        }
+
+        public void UpdateParams(int cacheCapacity = -1, float compactionInterval = -1f)
+        {
+            this.cacheCapacityPerLayer = cacheCapacity <= 0 ? this.cacheCapacityPerLayer : cacheCapacity;
+            this.compactionInterval = compactionInterval <= 0f ? this.compactionInterval : compactionInterval;
+
+            if(this.compactionExecutor != null)
+            {
+                this.compactionExecutor.Interval = this.compactionInterval;
+            }
         }
 
         public IEnumerable<int> GetIgnoreLayerIDs(int layerID)
