@@ -40,18 +40,18 @@ namespace PhysicsLayers.Common
             this.array[tail] = item;
             item.CacheIndex = tail;
         }
-
+        
         public void Remove(T item)
         {
             this.removed = true;
 
-            if(item.CacheIndex >= 0 && item.CacheIndex < this.array.Length)
+            if(item.CacheIndex >= 0 && item.CacheIndex < this.Tail)
             {
                 this.array[item.CacheIndex] = null;
                 return;
             }
 
-            for(var i = 0; i < this.array.Length; i++)
+            for(var i = 0; i < this.Tail; i++)
             {
                 if(this.array[i] == item)
                 {
@@ -72,7 +72,7 @@ namespace PhysicsLayers.Common
             var arr = this.array;
             var j = this.Tail - 1;
 
-            for(var i = 0; i < this.array.Length && j >= 0; i++)
+            for(var i = 0; i < this.Tail && j >= 0; i++)
             {
                 if(arr[i] == null)
                 {
