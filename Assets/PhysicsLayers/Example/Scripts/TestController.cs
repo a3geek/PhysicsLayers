@@ -26,7 +26,7 @@ namespace PhysicsLayers.Examples
         private int cacheCapacity = 250;
         [SerializeField, Range(0f, 60f)]
         private float compactionInterval = 1f;
-        
+
         private bool spawned = false;
         private Dictionary<int, List<AbstractCollisionCallbacks>> collisions = new Dictionary<int, List<AbstractCollisionCallbacks>>();
 
@@ -47,8 +47,14 @@ namespace PhysicsLayers.Examples
             {
                 return;
             }
-            
+
             if(Input.GetKeyDown(KeyCode.Space))
+            {
+                this.collisions[LayersManager.UnityLayerCount]
+                    .ForEach(coll => coll.GetComponent<Rigidbody2D>().simulated = !coll.GetComponent<Rigidbody2D>().simulated);
+            }
+
+            if(Input.GetKeyDown(KeyCode.V))
             {
                 this.collisions[LayersManager.UnityLayerCount]
                     .ForEach(coll => coll.gameObject.SetActive(!coll.gameObject.activeSelf));
@@ -57,7 +63,7 @@ namespace PhysicsLayers.Examples
             if(Input.GetKeyDown(KeyCode.A))
             {
                 var colls = this.collisions[LayersManager.UnityLayerCount];
-                
+
                 for(var i = 0; i < colls.Count; i++)
                 {
                     colls[i].Layer.ChangeLayer(LayersManager.UnityLayerCount + 1);
@@ -89,7 +95,7 @@ namespace PhysicsLayers.Examples
                 this.Create(info.Prefab, info.Parent, info.Color);
             }
         }
-        
+
         private IEnumerator Spawn()
         {
             for(var i = 0; i < this.fieldInfo.Infos.Count; i++)
@@ -120,7 +126,7 @@ namespace PhysicsLayers.Examples
             obj.GetComponent<Renderer>().material.SetColor("_Color", color);
             this.collisions[obj.LayerID].Add(obj);
         }
-        
+
         [Serializable]
         private class FieldInfo
         {
@@ -134,7 +140,7 @@ namespace PhysicsLayers.Examples
                 [HideInInspector]
                 public Transform Parent = null;
             }
-            
+
             public List<Info> Infos = new List<Info>();
         }
     }
